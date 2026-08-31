@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Preferred Vendor Management System</title>
+<style>
+  :root{
+    --navy:#10243A; --amber:#FFB700; --blue:#3470E0;
+    --ink:#1b2b3d; --mid:#4a5a6a; --soft:#7a8798;
+    --line:#d9e0e9; --tint:#eef3fa; --panel:#f7f9fc;
+  }
+  @page{ size:Letter; margin:14mm 15mm 16mm 15mm; }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Helvetica,Arial,sans-serif; color:var(--ink);
+    font-size:10.2pt; line-height:1.52; -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+  h1,h2,h3{margin:0; font-weight:bold; color:var(--navy); letter-spacing:-.01em}
+
+  /* ---------------------------------------------------------------- masthead */
+  .masthead{
+    background:var(--navy); color:#fff; padding:22px 24px 20px;
+    margin:0 0 22px; position:relative;
+  }
+  .masthead::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:3px;
+    background:var(--amber);
+  }
+  .brand{
+    font-size:8.2pt; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--amber); margin-bottom:12px;
+  }
+  .masthead h1{color:#fff; font-size:21pt; line-height:1.15; margin-bottom:6px}
+  .masthead .sub{color:#b9cbe0; font-size:10.5pt}
+  .meta{
+    margin-top:14px; padding-top:11px; border-top:1px solid rgba(255,255,255,.16);
+    display:flex; gap:26px; font-size:8.6pt; color:#9fb5cd;
+  }
+  .meta b{color:#e4edf6; font-weight:normal; display:block; font-size:9.4pt}
+
+  /* ---------------------------------------------------------------- structure */
+  .sec{margin:0 0 18px; page-break-inside:avoid}
+  .sec > h2{
+    font-size:12pt; padding-bottom:5px; margin-bottom:10px;
+    border-bottom:1.5px solid var(--line);
+  }
+  .sec > h2 span{color:var(--amber); margin-right:7px}
+  p{margin:0 0 9px}
+  .lede{font-size:10.8pt; color:var(--mid); margin-bottom:14px}
+
+  .cards{display:flex; gap:11px; margin:0 0 4px}
+  .c{
+    flex:1; border:1px solid var(--line); border-top:3px solid var(--blue);
+    background:var(--panel); padding:12px 13px 13px;
+  }
+  .c .n{
+    font-size:7.6pt; letter-spacing:.16em; color:var(--blue);
+    text-transform:uppercase; margin-bottom:6px;
+  }
+  .c h3{font-size:10.6pt; margin-bottom:6px}
+  .c p{font-size:9.1pt; color:var(--mid); margin:0 0 8px}
+  .c ul{margin:0; padding:0; list-style:none}
+  .c li{
+    font-size:8.7pt; color:var(--ink); padding-left:10px; position:relative;
+    margin-bottom:3px;
+  }
+  .c li::before{
+    content:""; position:absolute; left:0; top:6px; width:3.5px; height:3.5px;
+    background:var(--blue); border-radius:50%;
+  }
+
+  table{width:100%; border-collapse:collapse; margin:2px 0 6px}
+  th,td{text-align:left; padding:6px 9px; border-bottom:1px solid var(--line); vertical-align:top}
+  th{
+    background:var(--tint); color:var(--navy); font-size:8.4pt;
+    text-transform:uppercase; letter-spacing:.09em;
+  }
+  td{font-size:9.3pt; color:var(--mid)}
+  td.k{color:var(--ink); font-weight:bold; white-space:nowrap; width:31%}
+  .tick{color:#1d8348; font-weight:bold}
+
+  .flow{display:flex; align-items:stretch; gap:0; margin:2px 0 8px}
+  .step{
+    flex:1; background:var(--panel); border:1px solid var(--line);
+    padding:9px 11px; position:relative;
+  }
+  .step + .step{border-left:none}
+  .step .s{font-size:7.6pt; color:var(--blue); letter-spacing:.14em; text-transform:uppercase}
+  .step .t{font-size:9.2pt; font-weight:bold; color:var(--navy); margin:3px 0 2px}
+  .step .d{font-size:8.5pt; color:var(--mid); line-height:1.4}
+
+  .panel{
+    background:var(--navy); color:#dbe7f3; padding:15px 18px; margin:4px 0 0;
+    page-break-inside:avoid;
+  }
+  .panel h2{color:#fff; font-size:11.5pt; margin-bottom:4px}
+  .panel p{color:#a9c0d6; font-size:9.3pt; margin-bottom:11px}
+  .creds{display:flex; gap:30px; font-size:9.4pt}
+  .creds div{line-height:1.5}
+  .creds .lbl{color:#7f9ab5; font-size:8.2pt; text-transform:uppercase; letter-spacing:.12em}
+  .creds .val{color:#fff; font-family:"Courier New",monospace; font-size:9.8pt}
+  .creds a{color:var(--amber); text-decoration:none; font-family:"Courier New",monospace}
+
+  .note{
+    border-left:3px solid var(--amber); background:#fffaf0; padding:9px 12px;
+    font-size:9pt; color:#6b4d12; margin:10px 0 0;
+  }
+  footer{
+    margin-top:16px; padding-top:9px; border-top:1px solid var(--line);
+    font-size:8pt; color:var(--soft); display:flex; justify-content:space-between;
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="brand">Cumula 3 Group</div>
+  <h1>Preferred Vendor Management System</h1>
+  <div class="sub">Vendor intake, compliance and approval, native to NetSuite</div>
+  <div class="meta">
+    <span><b>Canaveral Port Authority</b>Prepared for</span>
+    <span><b>Purchasing Services</b>Department</span>
+    <span><b>Working prototype</b>Status</span>
+    <span><b>August 2026</b>Date</span>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span>&#9632;</span>What you are looking at</h2>
+  <p class="lede">A working prototype of the Preferred Vendor Management System, built
+    on your NetSuite account rather than alongside it. Three screens cover the whole
+    vendor lifecycle: a vendor applies, the Port reviews and approves, and the vendor
+    then manages their own compliance from a portal. Every screen is live and clickable
+    today.</p>
+  <p>Today vendor onboarding at the Port runs on email, spreadsheets and PDF
+    attachments. Applications arrive incomplete, certificates of insurance expire
+    without anyone noticing until a purchase order is held, and there is no single
+    place to see where a vendor is in the process. PVMS closes that loop inside the
+    system you already run your purchasing in.</p>
+</div>
+
+<div class="sec">
+  <h2><span>&#9632;</span>The three components</h2>
+  <div class="cards">
+    <div class="c">
+      <div class="n">01 &middot; Intake</div>
+      <h3>New Vendor Application</h3>
+      <p>What a prospective vendor sees. Guided and validated so information arrives
+         complete the first time.</p>
+      <ul>
+        <li>Company, contact and compliance capture</li>
+        <li>Insurance, W-9 and certification upload</li>
+        <li>NIGP commodity code selection</li>
+        <li>Validation before submission, not after</li>
+      </ul>
+    </div>
+    <div class="c">
+      <div class="n">02 &middot; Vendor</div>
+      <h3>Vendor Portal</h3>
+      <p>Where an approved vendor lives afterwards, so the Port stops chasing paperwork
+         by email.</p>
+      <ul>
+        <li>Application status and approval history</li>
+        <li>Document library with expiry tracking</li>
+        <li>Purchase orders, bills and payment history</li>
+        <li>Self service renewal before expiry</li>
+      </ul>
+    </div>
+    <div class="c">
+      <div class="n">03 &middot; Port staff</div>
+      <h3>PVMS inside NetSuite</h3>
+      <p>The internal view. Review, score, approve and report without leaving
+         NetSuite.</p>
+      <ul>
+        <li>Review queue with status and ageing</li>
+        <li>Multi step approval workflow</li>
+        <li>COI tracking and expiry alerts</li>
+        <li>Compliance dashboards and audit trail</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span>&#9632;</span>How a vendor moves through it</h2>
+  <div class="flow">
+    <div class="step">
+      <div class="s">Step 1</div>
+      <div class="t">Apply</div>
+      <div class="d">Vendor completes the guided application and uploads their
+        documents. Nothing incomplete can be submitted.</div>
+    </div>
+    <div class="step">
+      <div class="s">Step 2</div>
+      <div class="t">Review</div>
+      <div class="d">Purchasing sees it in the queue with everything attached. Risk and
+        IT security review in sequence, each visible.</div>
+    </div>
+    <div class="step">
+      <div class="s">Step 3</div>
+      <div class="t">Approve</div>
+      <div class="d">Approval creates the vendor record in NetSuite directly. No
+        rekeying, no second system.</div>
+    </div>
+    <div class="step">
+      <div class="s">Step 4</div>
+      <div class="t">Maintain</div>
+      <div class="d">The vendor keeps their own documents current from the portal. The
+        Port is alerted before anything expires.</div>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2><span>&#9632;</span>What this changes</h2>
+  <table>
+    <tr><th>Today</th><th>With PVMS</th></tr>
+    <tr>
+      <td class="k">Applications by email and PDF</td>
+      <td>Structured, validated intake. Complete on arrival.</td>
+    </tr>
+    <tr>
+      <td class="k">COI expiry found when a PO is held</td>
+      <td>Tracked with alerts before expiry, and the vendor renews it themselves.</td>
+    </tr>
+    <tr>
+      <td class="k">Status lives in someone's inbox</td>
+      <td>Review queue with ageing, visible to Purchasing and to the vendor.</td>
+    </tr>
+    <tr>
+      <td class="k">Vendor set up by rekeying</td>
+      <td>Approval creates the NetSuite vendor record directly.</td>
+    </tr>
+    <tr>
+      <td class="k">Compliance reporting assembled by hand</td>
+      <td>Dashboards and an audit trail as a by-product of the workflow.</td>
+    </tr>
+  </table>
+</div>
+
+<div class="sec">
+  <h2><span>&#9632;</span>Built on NetSuite, not beside it</h2>
+  <p>PVMS is native to your NetSuite account. That is a deliberate choice and it is
+    what separates this from a bolt-on vendor portal. The vendor record, the purchase
+    orders, the bills and the payment history are the same records your finance team
+    already works in. There is no synchronisation to break, no second source of truth
+    to reconcile, and no additional platform licence.</p>
+  <p>The prototype in front of you is the user experience, decided before any build
+    begins. What you change now costs nothing to change.</p>
+</div>
+
+<div class="panel">
+  <h2>Try it yourself</h2>
+  <p>All three screens are live and clickable. The data is illustrative sample data,
+    not live Port records, and nothing you enter is saved or submitted anywhere.</p>
+  <div class="creds">
+    <div>
+      <div class="lbl">Address</div>
+      <a href="https://portcanaveral-vendorportal-demo.onrender.com">portcanaveral-vendorportal-demo.onrender.com</a>
+    </div>
+    <div>
+      <div class="lbl">Username</div>
+      <div class="val">portcanaveral</div>
+    </div>
+    <div>
+      <div class="lbl">Password</div>
+      <div class="val">2nCQraUnZAyu6cWe</div>
+    </div>
+  </div>
+</div>
+
+<div class="note">
+  <b>Please break it.</b> Click everything. Where a control is not wired up yet the
+  prototype will tell you so plainly rather than doing nothing. Note what is missing,
+  what is named wrong, and what your team would actually do at that point in the
+  process. That feedback is the fastest and cheapest part of the whole project.
+</div>
+
+<footer>
+  <span>Cumula 3 Group, LLC &middot; Oracle NetSuite Solution Provider</span>
+  <span>Prepared for Canaveral Port Authority &middot; August 2026</span>
+</footer>
+
+</body>
+</html>
