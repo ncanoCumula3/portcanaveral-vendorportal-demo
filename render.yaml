@@ -7,6 +7,9 @@
 # PVMS_USER and PVMS_PASSWORD are sync:false, so they are never committed. Render
 # prompts for them on the first deploy and stores them as service environment
 # variables. The service refuses to start if either is missing.
+#
+# There is no healthCheckPath: every route including /healthz is behind the
+# credential, so Render marks the service live on the port binding instead.
 services:
   - type: web
     name: portcanaveral-vendorportal-demo
@@ -17,7 +20,6 @@ services:
     # No dependencies, the server is standard library only.
     buildCommand: "python -m compileall -q server.py build.py"
     startCommand: "python server.py"
-    healthCheckPath: /healthz
     autoDeploy: true
     envVars:
       - key: PYTHON_VERSION

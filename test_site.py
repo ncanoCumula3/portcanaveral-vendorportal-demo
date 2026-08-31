@@ -62,7 +62,9 @@ def main() -> int:
     try:
         for _ in range(60):
             try:
-                urllib.request.urlopen(base + "/healthz", timeout=1)
+                req = urllib.request.Request(base + "/healthz")
+                req.add_header("Authorization", "Basic " + GOOD)
+                urllib.request.urlopen(req, timeout=1)
                 break
             except Exception:
                 if proc.poll() is not None:
@@ -82,9 +84,10 @@ def main() -> int:
         for p in ("/netsuite", "/new-application", "/vendor-portal"):
             check(f"no credentials on {p} is 401", get(base, p)[0], 401)
 
-        print("\nhealth check")
-        st, body, _ = get(base, "/healthz")
-        check("/healthz is 200 without credentials", st, 200)
+        print("\nhealth check is protected too")
+        check("/healthz is 401 without credentials", get(base, "/healthz")[0], 401)
+        st, body, _ = get(base, "/healthz", GOOD)
+        check("/healthz is 200 with credentials", st, 200)
         check("/healthz body", body.strip(), "ok")
 
         print("\nentry points")

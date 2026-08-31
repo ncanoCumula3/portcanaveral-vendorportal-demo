@@ -29,7 +29,6 @@ print(json.dumps({
     "repo": repo, "branch": "main", "autoDeploy": "yes",
     "serviceDetails": {
         "env": "python", "region": "ohio", "plan": "starter",
-        "healthCheckPath": "/healthz",
         "envSpecificDetails": {
             "buildCommand": "python -m compileall -q server.py build.py",
             "startCommand": "python server.py",
@@ -81,7 +80,7 @@ done
 
 echo
 echo "verifying the live site"
-for p in /healthz / /new-application /vendor-portal /netsuite; do
+for p in / /new-application /vendor-portal /netsuite /healthz; do
     code=$(curl -s -o /dev/null -w '%{http_code}' -u "$PVMS_USER:$PVMS_PASSWORD" "$live$p")
     noauth=$(curl -s -o /dev/null -w '%{http_code}' "$live$p")
     printf '  %-18s authed %s   unauthed %s\n' "$p" "$code" "$noauth"

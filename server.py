@@ -12,7 +12,7 @@ Routes
     /netsuite             Preferred Vendor Management System, NetSuite view
     /new-application      New Vendor Application
     /vendor-portal        Vendor Portal
-    /healthz              unauthenticated, for the Render health check
+    /healthz              liveness, also behind the credential
 
 Credentials come from PVMS_USER and PVMS_PASSWORD. The service refuses to start
 without them, so an unprotected deploy is not possible by accident.
@@ -113,12 +113,16 @@ class Handler(BaseHTTPRequestHandler):
         if len(path) > 1 and path.endswith("/"):
             path = path.rstrip("/") or "/"
 
-        if path == "/healthz":
-            self._send(HTTPStatus.OK, b"ok", "text/plain; charset=utf-8")
-            return
-
+        # Every route is behind the credential, /healthz included. Nothing about this
+        # preview is public. Render therefore has no health check path and marks the
+        # service live on the port binding instead, which is also less churn than a
+        # path check on a single instance.
         if not self._authorised():
             self._challenge()
+            return
+
+        if path == "/healthz":
+            self._send(HTTPStatus.OK, b"ok", "text/plain; charset=utf-8")
             return
 
         path = ALIASES.get(path.lower(), path)

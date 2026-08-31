@@ -24,7 +24,8 @@ from pathlib import Path
 import websocket  # websocket-client
 
 PORT = int(os.environ.get("PORT", "8000"))
-BASE = f"http://127.0.0.1:{PORT}"
+# BASE_URL points the same pass at the deployed site instead of localhost.
+BASE = os.environ.get("BASE_URL", f"http://127.0.0.1:{PORT}").rstrip("/")
 USER = os.environ.get("PVMS_USER", "portcanaveral")
 PASSWORD = os.environ.get("PVMS_PASSWORD", "")
 SHOTS = Path(__file__).resolve().parent / "shots"
@@ -194,9 +195,8 @@ def main() -> int:
         # back with an unresolved promise instead of the status.
         tab.goto(BASE + "/")
         tab.send("Network.setExtraHTTPHeaders", {"headers": {}})
-        for path in ("/netsuite", "/new-application", "/vendor-portal", "/"):
+        for path in ("/netsuite", "/new-application", "/vendor-portal", "/", "/healthz"):
             check(f"{path} is 401 to an unauthenticated request", tab.status(path), 401)
-        check("/healthz stays open for the health check", tab.status("/healthz"), 200)
 
     finally:
         tab.close()
