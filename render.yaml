@@ -9,7 +9,7 @@
 # variables. The service refuses to start if either is missing.
 services:
   - type: web
-    name: pvms-preview
+    name: portcanaveral-vendorportal-demo
     runtime: python
     plan: starter
     region: ohio

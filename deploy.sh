@@ -5,7 +5,7 @@
 # "selected repositories" on the ncanoCumula3 account, and this repo is new, so it is
 # not on that list yet. Add it at
 #     https://github.com/settings/installations  ->  Render  ->  Configure
-#     ->  Repository access  ->  add ncanoCumula3/pvms-preview  ->  Save
+#     ->  Repository access  ->  add ncanoCumula3/portcanaveral-vendorportal-demo  ->  Save
 #
 # Then:
 #     PVMS_PASSWORD=... ./deploy.sh
@@ -19,13 +19,13 @@ cd "$(dirname "$0")"
 : "${PVMS_PASSWORD:?set PVMS_PASSWORD to the password reviewers will be given}"
 PVMS_USER="${PVMS_USER:-portcanaveral}"
 OWNER="${RENDER_OWNER:-tea-commfvsf7o1s73f757og}"   # Oakmorelabs
-REPO="https://github.com/ncanoCumula3/pvms-preview"
+REPO="https://github.com/ncanoCumula3/portcanaveral-vendorportal-demo"
 
 payload=$(python3 - "$OWNER" "$REPO" "$PVMS_USER" "$PVMS_PASSWORD" <<'PY'
 import json, sys
 owner, repo, user, password = sys.argv[1:5]
 print(json.dumps({
-    "type": "web_service", "name": "pvms-preview", "ownerId": owner,
+    "type": "web_service", "name": "portcanaveral-vendorportal-demo", "ownerId": owner,
     "repo": repo, "branch": "main", "autoDeploy": "yes",
     "serviceDetails": {
         "env": "python", "region": "ohio", "plan": "starter",
