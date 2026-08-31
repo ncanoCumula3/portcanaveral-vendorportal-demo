@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Port Canaveral · New Vendor Application</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:      #0d2240;
+  --blue:      #1a5fa8;
+  --sky:       #2b84d8;
+  --sky-light: #e8f2fb;
+  --sky-mid:   #c4d9f0;
+  --teal:      #0e8080;
+  --green:     #1d8348;
+  --green-bg:  #eaf6ee;
+  --amber:     #b45309;
+  --amber-bg:  #fef3c7;
+  --red:       #b91c1c;
+  --red-bg:    #fee2e2;
+  --white:     #ffffff;
+  --g50:       #f7f9fc;
+  --g100:      #eef1f6;
+  --g200:      #dde3ed;
+  --g300:      #c4cdd9;
+  --g400:      #9aaab8;
+  --g500:      #6b7d8f;
+  --g600:      #4a5a6a;
+  --g700:      #2e3d4d;
+  --g900:      #0d1f30;
+  --r:         4px;
+  --sh:        0 2px 8px rgba(13,34,64,0.09);
+  --sh-lg:     0 8px 32px rgba(13,34,64,0.13);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 14px;
+  color: var(--g700);
+  background: var(--g50);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ── TOP HEADER ── */
+.app-header {
+  background: var(--navy);
+  padding: 0 32px;
+  height: 52px;
+  display: flex; align-items: center; gap: 16px;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.22);
+}
+.hdr-logo { display: flex; align-items: center; gap: 10px; }
+.hdr-mark {
+  width: 30px; height: 30px; border-radius: 7px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+}
+.hdr-name { font-size: 14px; font-weight: 700; color: white; letter-spacing: 0.01em; }
+.hdr-name span { color: rgba(255,255,255,0.45); font-weight: 400; font-size: 12.5px; }
+.hdr-sep { width: 1px; height: 22px; background: rgba(255,255,255,0.15); }
+.hdr-title { font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 500; }
+.hdr-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.hdr-help {
+  font-size: 12.5px; color: rgba(255,255,255,0.65);
+  display: flex; align-items: center; gap: 5px; cursor: pointer;
+}
+.hdr-help:hover { color: white; }
+.hdr-save-btn {
+  padding: 5px 14px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: var(--r);
+  font-family: inherit; font-size: 12.5px; font-weight: 600;
+  color: rgba(255,255,255,0.9); cursor: pointer;
+  transition: all 0.15s;
+}
+.hdr-save-btn:hover { background: rgba(255,255,255,0.18); color: white; }
+
+/* ── LAYOUT ── */
+.app-body { display: flex; min-height: calc(100vh - 52px); }
+
+/* ── LEFT PROGRESS PANEL ── */
+.progress-panel {
+  width: 260px; min-width: 260px;
+  background: var(--white);
+  border-right: 1px solid var(--g200);
+  padding: 28px 0;
+  position: sticky;
+  top: 52px;
+  height: calc(100vh - 52px);
+  overflow-y: auto;
+  display: flex; flex-direction: column;
+}
+
+.pp-top { padding: 0 24px 24px; border-bottom: 1px solid var(--g100); margin-bottom: 20px; }
+.pp-label { font-size: 10.5px; font-weight: 700; color: var(--g400); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+
+/* Overall progress ring */
+.pp-ring-wrap { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.pp-ring { position: relative; width: 52px; height: 52px; flex-shrink: 0; }
+.pp-ring svg { width: 52px; height: 52px; }
+.pp-ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.pp-pct { font-size: 14px; font-weight: 700; color: var(--g900); font-family: 'DM Mono', monospace; }
+.pp-done { font-size: 9px; color: var(--g400); font-weight: 600; }
+.pp-ring-info h3 { font-size: 13.5px; font-weight: 700; color: var(--g900); }
+.pp-ring-info p { font-size: 11.5px; color: var(--g500); margin-top: 2px; }
+
+/* Progress bar */
+.pp-bar-wrap { }
+.pp-bar-track { height: 5px; background: var(--g100); border-radius: 3px; overflow: hidden; }
+.pp-bar-fill { height: 100%; background: linear-gradient(90deg, var(--sky), var(--teal)); border-radius: 3px; transition: width 0.5s ease; }
+.pp-bar-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--g400); margin-top: 5px; }
+
+/* Steps list */
+.pp-steps { padding: 0 16px; flex: 1; }
+.pp-step {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 9px 8px;
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: background 0.12s;
+  position: relative;
+  margin-bottom: 1px;
+}
+.pp-step:hover { background: var(--g50); }
+.pp-step.active { background: var(--sky-light); }
+.pp-step-indicator {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700;
+  flex-shrink: 0;
+  border: 2px solid;
+  transition: all 0.2s;
+  margin-top: 1px;
+}
+.si-done { background: var(--green); border-color: var(--green); color: white; }
+.si-active { background: var(--sky); border-color: var(--sky); color: white; box-shadow: 0 0 0 3px rgba(43,132,216,0.2); }
+.si-wait { background: var(--white); border-color: var(--g300); color: var(--g400); }
+.si-error { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+.pp-step-text { flex: 1; padding-top: 1px; }
+.pp-step-name { font-size: 13px; font-weight: 600; color: var(--g700); line-height: 1.3; }
+.pp-step.active .pp-step-name { color: var(--blue); }
+.pp-step-sub { font-size: 11px; color: var(--g400); margin-top: 2px; }
+.pp-step-check { font-size: 11px; margin-top: 3px; }
+.pp-step-check.done { color: var(--green); }
+.pp-step-check.missing { color: var(--red); }
+
+/* Connector line */
+.pp-connector {
+  width: 2px; height: 14px; background: var(--g200);
+  margin: 0 0 0 19px;
+}
+.pp-connector.done { background: var(--green); }
+
+.pp-footer {
+  padding: 16px 24px 0;
+  border-top: 1px solid var(--g100);
+  margin-top: auto;
+}
+.pp-contact { font-size: 12px; color: var(--g500); line-height: 1.7; }
+.pp-contact strong { color: var(--g700); }
+.pp-contact a { color: var(--sky); text-decoration: none; cursor: pointer; }
+
+/* ── MAIN FORM AREA ── */
+.form-area {
+  flex: 1;
+  padding: 28px 32px 60px;
+  max-width: 860px;
+}
+
+/* ── STEP PAGES ── */
+.step-page { display: none; }
+.step-page.active { display: block; animation: stepIn 0.25s ease both; }
+@keyframes stepIn { from{opacity:0;transform:translateX(12px)} to{opacity:1;transform:translateX(0)} }
+
+/* ── STEP HEADER ── */
+.step-hdr { margin-bottom: 24px; }
+.step-hdr-row { display: flex; align-items: center; gap: 14px; margin-bottom: 6px; }
+.step-num-badge {
+  width: 36px; height: 36px; border-radius: 9px;
+  background: linear-gradient(135deg, var(--sky), var(--blue));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800; color: white; flex-shrink: 0;
+}
+.step-hdr h2 { font-size: 20px; font-weight: 700; color: var(--g900); }
+.step-hdr p { font-size: 13.5px; color: var(--g500); margin-top: 4px; padding-left: 50px; }
+
+/* ── FORM CARD ── */
+.fcard {
+  background: var(--white);
+  border: 1px solid var(--g200);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  box-shadow: var(--sh);
+}
+.fcard-hdr {
+  background: var(--g50);
+  border-bottom: 1px solid var(--g200);
+  padding: 12px 20px;
+  font-size: 13.5px; font-weight: 700;
+  color: var(--g900);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.fcard-hdr-left { display: flex; align-items: center; gap: 8px; }
+.fcard-ico { font-size: 15px; }
+.fcard-body { padding: 20px; }
+
+/* ── FIELD SYSTEM ── */
+.frow { display: grid; gap: 16px; margin-bottom: 14px; }
+.frow:last-child { margin-bottom: 0; }
+.frow.c2 { grid-template-columns: 1fr 1fr; }
+.frow.c3 { grid-template-columns: 1fr 1fr 1fr; }
+.frow.c14 { grid-template-columns: 1fr 4fr; }
+.frow.c31 { grid-template-columns: 3fr 1fr; }
+
+.f { display: flex; flex-direction: column; gap: 4px; }
+.lbl {
+  font-size: 12.5px; font-weight: 600;
+  color: var(--g600);
+  display: flex; align-items: center; gap: 4px;
+}
+.lbl .req { color: var(--red); font-size: 13px; }
+.lbl .tip {
+  font-size: 10.5px; font-weight: 400;
+  color: var(--g400); margin-left: 3px;
+}
+
+.inp, .sel, .ta {
+  padding: 8px 11px;
+  border: 1px solid var(--g300);
+  border-radius: var(--r);
+  font-family: inherit; font-size: 13.5px;
+  color: var(--g900); background: var(--white);
+  outline: none;
+  transition: border-color 0.14s, box-shadow 0.14s;
+  width: 100%;
+}
+.inp:focus, .sel:focus, .ta:focus {
+  border-color: var(--sky);
+  box-shadow: 0 0 0 3px rgba(43,132,216,0.12);
+}
+.inp.filled { border-color: var(--g300); background: var(--g50); }
+.inp.error { border-color: var(--red); background: var(--red-bg); }
+.ta { resize: vertical; min-height: 80px; }
+.fhint { font-size: 11.5px; color: var(--g400); margin-top: 2px; }
+.ferr { font-size: 11.5px; color: var(--red); margin-top: 2px; font-weight: 500; }
+
+/* ── CHECKBOX / RADIO ── */
+.check-list { display: flex; flex-direction: column; gap: 8px; }
+.check-item { display: flex; align-items: flex-start; gap: 9px; cursor: pointer; padding: 7px 10px; border-radius: var(--r); border: 1px solid var(--g200); transition: all 0.12s; }
+.check-item:hover { background: var(--sky-light); border-color: var(--sky-mid); }
+.check-item.checked { background: var(--sky-light); border-color: var(--sky); }
+.check-item input { accent-color: var(--sky); margin-top: 2px; width: 15px; height: 15px; flex-shrink: 0; }
+.check-label { font-size: 13.5px; color: var(--g700); font-weight: 500; }
+.check-sub { font-size: 11.5px; color: var(--g400); margin-top: 1px; }
+
+.radio-inline { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+.radio-opt {
+  display: flex; align-items: center; gap: 7px;
+  padding: 7px 14px;
+  border: 1px solid var(--g200);
+  border-radius: var(--r);
+  cursor: pointer;
+  font-size: 13.5px; font-weight: 500;
+  color: var(--g600);
+  transition: all 0.12s;
+  background: var(--white);
+}
+.radio-opt:hover { border-color: var(--sky-mid); background: var(--sky-light); }
+.radio-opt.selected { border-color: var(--sky); background: var(--sky-light); color: var(--blue); }
+.radio-opt input { accent-color: var(--sky); }
+
+/* ── NOTICE BOXES ── */
+.notice {
+  border-radius: var(--r);
+  padding: 12px 16px;
+  display: flex; gap: 10px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+.notice.red { background: var(--red-bg); border: 1px solid #fca5a5; color: var(--red); }
+.notice.amber { background: var(--amber-bg); border: 1px solid #fcd34d; color: var(--amber); }
+.notice.blue { background: var(--sky-light); border: 1px solid var(--sky-mid); color: var(--blue); }
+.notice.green { background: var(--green-bg); border: 1px solid #86efac; color: var(--green); }
+.notice-ico { flex-shrink: 0; font-size: 15px; margin-top: 1px; }
+.notice-body strong { display: block; margin-bottom: 2px; }
+.notice-body a { color: inherit; font-weight: 700; cursor: pointer; }
+
+/* ── UPLOAD ZONE ── */
+.upload-zone {
+  border: 2px dashed var(--g300);
+  border-radius: var(--r);
+  padding: 24px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.18s;
+  background: var(--g50);
+}
+.upload-zone:hover {
+  border-color: var(--sky);
+  background: var(--sky-light);
+}
+.upload-zone.has-file {
+  border-color: var(--green);
+  background: var(--green-bg);
+}
+.uz-ico { font-size: 30px; margin-bottom: 8px; }
+.uz-title { font-size: 13.5px; font-weight: 600; color: var(--g600); }
+.uz-sub { font-size: 12px; color: var(--g400); margin-top: 3px; }
+.uz-types { margin-top: 8px; display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
+.uz-type { font-size: 10.5px; background: var(--g200); color: var(--g500); border-radius: 3px; padding: 2px 6px; font-weight: 600; }
+
+.file-attached {
+  display: none;
+  align-items: center; gap: 10px;
+  background: var(--green-bg);
+  border: 1px solid #86efac;
+  border-radius: var(--r);
+  padding: 10px 14px;
+  margin-top: 8px;
+  font-size: 13px;
+}
+.file-attached.show { display: flex; }
+.fa-ico { font-size: 18px; }
+.fa-name { flex: 1; font-weight: 600; color: var(--green); }
+.fa-size { font-size: 11.5px; color: var(--g400); }
+.fa-del { color: var(--red); cursor: pointer; font-size: 15px; font-weight: 700; }
+
+/* ── REQUIRED CHECKLIST SIDEBAR ── */
+.req-checklist { }
+.rcl-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--g100); font-size: 12.5px; }
+.rcl-item:last-child { border-bottom: none; }
+.rcl-ico { width: 18px; text-align: center; flex-shrink: 0; }
+.rcl-name { flex: 1; color: var(--g600); }
+.rcl-status { font-size: 11px; font-weight: 600; }
+.rcl-status.ok { color: var(--green); }
+.rcl-status.miss { color: var(--red); }
+.rcl-status.na { color: var(--g400); }
+
+/* ── STEP NAV BUTTONS ── */
+.step-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--g200);
+}
+.step-nav-left { display: flex; gap: 10px; }
+.step-nav-right { display: flex; gap: 10px; align-items: center; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 20px;
+  border-radius: var(--r);
+  font-family: inherit; font-size: 13.5px; font-weight: 600;
+  cursor: pointer; border: 1px solid;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn-primary { background: var(--blue); border-color: var(--blue); color: white; box-shadow: 0 2px 6px rgba(26,95,168,0.2); }
+.btn-primary:hover { background: var(--sky); border-color: var(--sky); }
+.btn-outline { background: white; border-color: var(--g300); color: var(--g600); }
+.btn-outline:hover { border-color: var(--sky); color: var(--blue); background: var(--sky-light); }
+.btn-ghost { background: none; border-color: transparent; color: var(--g500); padding: 9px 12px; }
+.btn-ghost:hover { color: var(--g700); background: var(--g100); border-color: var(--g200); }
+.btn-success { background: var(--green); border-color: var(--green); color: white; }
+.btn-success:hover { background: #1a7840; }
+.btn-lg { padding: 11px 28px; font-size: 14.5px; }
+
+.step-counter { font-size: 12.5px; color: var(--g400); }
+
+/* ── REVIEW SECTION ── */
+.review-section { margin-bottom: 16px; }
+.review-section-title { font-size: 12px; font-weight: 700; color: var(--g400); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--g200); display: flex; align-items: center; justify-content: space-between; }
+.review-section-title a { font-size: 11.5px; color: var(--sky); text-transform: none; letter-spacing: 0; cursor: pointer; font-weight: 600; }
+.review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; }
+.rv-field { display: flex; flex-direction: column; gap: 2px; padding: 5px 0; }
+.rv-label { font-size: 11px; color: var(--g400); font-weight: 600; }
+.rv-val { font-size: 13px; color: var(--g900); font-weight: 500; }
+.rv-val.mono { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--blue); }
+
+/* ── SUCCESS SCREEN ── */
+#success-screen {
+  display: none;
+  min-height: calc(100vh - 52px);
+  align-items: center; justify-content: center;
+  padding: 40px 20px;
+  background: var(--g50);
+}
+#success-screen.show { display: flex; }
+.success-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--sh-lg);
+  padding: 48px 44px;
+  max-width: 580px; width: 100%;
+  text-align: center;
+  animation: popIn 0.5s cubic-bezier(0.34,1.3,0.64,1) both;
+}
+@keyframes popIn { from{transform:scale(0.9);opacity:0} to{transform:scale(1);opacity:1} }
+.success-icon { font-size: 56px; margin-bottom: 16px; }
+.success-card h2 { font-size: 24px; font-weight: 800; color: var(--g900); margin-bottom: 10px; }
+.success-card p { font-size: 14px; color: var(--g500); line-height: 1.7; margin-bottom: 20px; }
+.success-ref {
+  background: var(--sky-light);
+  border: 1px solid var(--sky-mid);
+  border-radius: 8px;
+  padding: 14px 20px;
+  margin: 20px 0;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.sr-row { display: flex; justify-content: space-between; font-size: 13px; }
+.sr-label { color: var(--g500); }
+.sr-val { font-weight: 700; color: var(--g900); font-family: 'DM Mono', monospace; font-size: 12.5px; }
+.success-wf { display: flex; align-items: flex-start; gap: 0; margin: 20px 0; }
+.swf-step { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+.swf-step:not(:last-child)::after { content: ''; position: absolute; top: 13px; left: 50%; right: -50%; height: 2px; background: var(--g200); }
+.swf-dot { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; border: 2px solid; position: relative; z-index: 1; background: white; }
+.swf-active { border-color: var(--sky); background: var(--sky); color: white; }
+.swf-wait { border-color: var(--g300); color: var(--g400); }
+.swf-label { font-size: 10.5px; color: var(--g500); margin-top: 6px; text-align: center; max-width: 64px; line-height: 1.3; font-weight: 500; }
+.success-btns { display: flex; gap: 10px; justify-content: center; margin-top: 24px; }
+
+/* ── TOAST ── */
+#toast { position:fixed; bottom:20px; right:20px; background:var(--g900); color:white; border-radius:8px; padding:11px 16px; display:flex; align-items:center; gap:10px; box-shadow:var(--sh-lg); z-index:9999; max-width:300px; transform:translateY(50px); opacity:0; transition:all 0.3s cubic-bezier(0.34,1.3,0.64,1); pointer-events:none; font-size:13px; }
+#toast.show { transform:translateY(0); opacity:1; pointer-events:all; }
+#toast .tico { font-size:15px; }
+
+/* ── SCROLL BAR ── */
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-thumb { background:var(--g300); border-radius:4px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width:900px) {
+  .progress-panel { display:none; }
+  .form-area { padding:20px 16px 50px; }
+  .frow.c2,.frow.c3 { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast"><span class="tico" id="ticon">✓</span><span id="tmsg"></span></div>
+
+<!-- ═══════ TOP HEADER ═══════ -->
+<header class="app-header">
+  <div class="hdr-logo">
+    <div class="hdr-mark">⚓</div>
+    <div class="hdr-name">Port Canaveral <span>· Purchasing Services</span></div>
+  </div>
+  <div class="hdr-sep"></div>
+  <div class="hdr-title">New Vendor Application</div>
+  <div class="hdr-right">
+    <div class="hdr-help" onclick="showToast('❓','Help: (321) 783-7831 or purchasing@portcanaveral.com')">❓ Need help?</div>
+    <button class="hdr-save-btn" onclick="saveDraft()">💾 Save Draft</button>
+  </div>
+</header>
+
+<!-- ═══════ APP BODY ═══════ -->
+<div class="app-body" id="app-body">
+
+  <!-- LEFT PANEL -->
+  <aside class="progress-panel">
+    <div class="pp-top">
+      <div class="pp-label">Application Progress</div>
+      <div class="pp-ring-wrap">
+        <div class="pp-ring">
+          <svg viewBox="0 0 52 52">
+            <circle cx="26" cy="26" r="21" fill="none" stroke="#eef1f6" stroke-width="6"/>
+            <circle cx="26" cy="26" r="21" fill="none" stroke="url(#ringGrad)" stroke-width="6"
+              stroke-dasharray="131.9" id="ring-fill" stroke-dashoffset="131.9"
+              stroke-linecap="round"
+              style="transform-origin:26px 26px;transform:rotate(-90deg);transition:stroke-dashoffset 0.5s ease"/>
+            <defs>
+              <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#2b84d8"/>
+                <stop offset="100%" stop-color="#0e8080"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="pp-ring-center">
+            <div class="pp-pct" id="ring-pct">0%</div>
+          </div>
+        </div>
+        <div class="pp-ring-info">
+          <h3 id="pp-step-name">Getting Started</h3>
+          <p id="pp-step-sub">Step 1 of 6</p>
+        </div>
+      </div>
+      <div class="pp-bar-wrap">
+        <div class="pp-bar-track"><div class="pp-bar-fill" id="bar-fill" style="width:0%"></div></div>
+        <div class="pp-bar-label"><span id="bar-left">0 of 6 complete</span><span id="bar-right">0%</span></div>
+      </div>
+    </div>
+
+    <div class="pp-steps" id="pp-steps">
+      <!-- Rendered by JS -->
+    </div>
+
+    <div class="pp-footer">
+      <div class="pp-contact">
+        <strong>Purchasing Services</strong><br>
+        399 Challenger Rd, Cape Canaveral FL 32920<br>
+        📞 (321) 783-7831<br>
+        📠 (321) 868-2184<br>
+        <a onclick="showToast('📧','Contacts: purchasing@portcanaveral.com')">📧 Contact us →</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN FORM -->
+  <main class="form-area" id="form-area">
+
+    <!-- ═══ STEP 1: Company Info ═══ -->
+    <div class="step-page active" id="step-1">
+      <div class="step-hdr">
+        <div class="step-hdr-row">
+          <div class="step-num-badge">1</div>
+          <h2>Company Information</h2>
+        </div>
+        <p>Tell us about your business. All fields marked <span style="color:var(--red)">*</span> are required.</p>
+      </div>
+
+      <div class="notice amber">
+        <span class="notice-ico">⚠</span>
+        <div class="notice-body">
+          <strong>Before you begin:</strong> A completed <strong>W-9</strong> and current <strong>Certificate of Insurance (COI)</strong> listing <em>Canaveral Port Authority as Additional Insured</em> are required. A vendor cannot receive a PO or payment until these are processed. <a>View insurance requirements →</a>
+        </div>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard-hdr">
+          <div class="fcard-hdr-left"><span class="fcard-ico">🏢</span> Business Details</div>
+        </div>
+        <div class="fcard-body">
+          <div class="frow c2">
+            <div class="f">
+              <label class="lbl">Company / Legal Business Name <span class="req">*</span></label>
+              <input class="inp" id="f-company" placeholder="Legal name as registered with state" oninput="markFilled(this)">
+              <div class="fhint">Enter your full legal business name as filed with the state</div>
+            </div>
+            <div class="f">
+              <label class="lbl">Website Address <span class="tip">(optional)</span></label>
+              <input class="inp" id="f-website" placeholder="https://www.yourcompany.com" oninput="markFilled(this)">
+            </div>
+          </div>
+          <div class="frow c2">
+            <div class="f">
+              <label class="lbl">Federal Tax ID (EIN) <span class="req">*</span></label>
+              <input class="inp" id="f-ein" placeholder="XX-XXXXXXX" oninput="markFilled(this)">
+              <div class="fhint">9-digit employer identification number</div>
+            </div>
+            <div class="f">
+              <label class="lbl">State of Incorporation <span class="req">*</span></label>
+              <select class="sel" id="f-state-inc">
+                <option value="">Select state...</option>
+                <option>Florida</option><option>Georgia</option><option>Alabama</option>
+                <option>South Carolina</option><option>Texas</option><option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="frow">
+            <div class="f">
+              <label class="lbl">Years in Business <span class="req">*</span></label>
+              <div class="radio-inline">
+                <label class="radio-opt" onclick="selectRadio(this,'yib')"><input type="radio" name="yib"> Less than 1 year</label>
+                <label class="radio-opt" onclick="selectRadio(this,'yib')"><input type="radio" name="yib"> 1–3 years</label>
+                <label class="radio-opt" onclick="selectRadio(this,'yib')"><input type="radio" name="yib"> 3–10 years</label>
+                <label class="radio-opt" onclick="selectRadio(this,'yib')"><input type="radio" name="yib"> 10+ years</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard-hdr">
+          <div class="fcard-hdr-left"><span class="fcard-ico">📦</span> Type of Business</div>
+          <span style="font-size:11.5px;color:var(--g400)">Select all that apply</span>
+        </div>
+        <div class="fcard-body">
+          <div class="check-list">
+            <label class="check-item" onclick="toggleCheck(this)">
+              <input type="checkbox" name="btype" value="service">
+              <div>
+                <div class="check-label">Service Provider</div>
+                <div class="check-sub">You provide labor or professional services to CPA</div>
+              </div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+              <input type="checkbox" name="btype" value="supplier">
+              <div>
+                <div class="check-label">Supplier / Distributor</div>
+                <div class="check-sub">You supply or distribute goods and materials</div>
+              </div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+              <input type="checkbox" name="btype" value="manufacturer">
+              <div>
+                <div class="check-label">Manufacturer</div>
+                <div class="check-sub">You manufacture products or equipment</div>
+              </div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+              <input type="checkbox" name="btype" value="media">
+              <div>
+                <div class="check-label">Advertising / Media <span style="font-size:11.5px;color:var(--g400);font-weight:400">(COI not required)</span></div>
+                <div class="check-sub">Marketing, advertising, or media services</div>
+              </div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+              <input type="checkbox" name="btype" value="govt">
+              <div>
+                <div class="check-label">Government Agency / Non-Profit <span style="font-size:11.5px;color:var(--g400);font-weight:400">(COI not required)</span></div>
+                <div class="check-sub">Public entity or 501(c)(3) organization</div>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard-hdr">
+          <div class="fcard-hdr-left"><span class="fcard-ico">🏷</span> NIGP Commodity Code</div>
+        </div>
+        <div class="fcard-body">
+          <div class="frow c2">
+            <div class="f">
+              <label class="lbl">NIGP Code <span class="req">*</span></label>
+              <select class="sel" id="f-nigp">
+                <option value="">Select commodity code...</option>
+                <option value="206">206 — Information Technology Services</option>
+                <option value="460">460 — Construction Services</option>
+                <option value="462">462 — Fire Protection &amp; Safety</option>
+                <option value="910">910 — HVAC Services</option>
+                <option value="912">912 — Marine &amp; Docking Services</option>
+                <option value="961">961 — Transportation &amp; Cargo</option>
+                <option value="962">962 — Electrical Contractors</option>
+                <option value="963">963 — Plumbing Services</option>
+                <option value="968">968 — Landscaping &amp; Ground Maintenance</option>
+                <option value="other">Other (describe below)</option>
+              </select>
+              <div class="fhint">National Institute of Governmental Purchasing code</div>
+            </div>
+            <div class="f">
+              <label class="lbl">NIGP Sub-Code / Specialty <span class="tip">(optional)</span></label>
+              <input class="inp" placeholder="e.g. 962-64 for Electrical Contractors" oninput="markFilled(this)">
+            </div>
+          </div>
+          <div class="frow">
+            <div class="f">
+              <label class="lbl">Description of Goods / Services <span class="req">*</span></label>
+              <textarea class="ta" id="f-description" placeholder="Describe in detail the goods and/or services your company provides to Port Canaveral. Include specializations, certifications, and any relevant equipment or capabilities." oninput="markFilled(this)"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <div class="step-nav-left"></div>
+        <div class="step-nav-right">
+          <span class="step-counter">Step 1 of 6</span>
+          <button class="btn btn-primary" onclick="goStep(2)">Continue — Physical Address →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 2: Physical Address ═══ -->
+    <div class="step-page" id="step-2">
+      <div class="step-hdr">
+        <div class="step-hdr-row">
+          <div class="step-num-badge">2</div>
+          <h2>Physical Address &amp; Primary Contact</h2>
+        </div>
+        <p>Your company's primary business address and main point of contact for Port Canaveral.</p>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard-hdr"><div class="fcard-hdr-left"><span class="fcard-ico">📍</span> Physical / Office Address</div></div>
+        <div class="fcard-body">
+          <div class="frow">
+            <div class="f">
+              <label class="lbl">Street Address <span class="req">*</span></label>
+              <input class="inp" id="f-addr1" placeholder="123 Business Blvd" oninput="markFilled(this)">
+            </div>
+          </div>
+          <div class="frow c2">
+            <div class="f">
+              <label class="lbl">Address Line 2 <span class="tip">(Suite, Unit, Floor)</span></label>
+              <input class="inp" placeholder="Suite 100" oninput="markFilled(this)">
+            </div>
+            <div class="f">
+              <label class="lbl">City <span class="req">*</span></label>
+              <input class="inp" id="f-city" placeholder="City" oninput="markFilled(this)">
+            </div>
+          </div>
+          <div class="frow c3">
+            <div class="f">
+              <label class="lbl">State <span class="req">*</span></label>
+              <select class="sel" id="f-state">
+                <option value="">State</option>
+                <option>FL</option><option>GA</option><option>AL</option><option>SC</option><option>TX</option><option>CA</option><option>Other</option>
+              </select>
+            </div>
+            <div class="f">
+              <label class="lbl">ZIP Code <span class="req">*</span></label>
+              <input class="inp" id="f-zip" placeholder="32920" maxlength="10" oninput="markFilled(this)">
+            </div>
+            <div class="f">
+              <label class="lbl">Country <span class="req">*</span></label>
+              <select class="sel"><option>United States</option><option>Other</option></select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard-hdr"><div class="fcard-hdr-left"><span class="fcard-ico">👤</span> Primary Contact</div></div>
+        <div class="fcard-body">
+          <div class="frow c3">
+            <div class="f">
+              <label class="lbl">First Name <span class="req">*</span></label>
+              <input class="inp" id="f-fname" placeholder="First" oninput="markFilled(this)">
+            </div>
+            <div class="f">
+              <label class="lbl">Last Name <span class="req">*</span></label>
+              <input class="inp" id="f-lname" placeholder="Last" oninput="markFilled(this)">
+            </div>
+            <div class="f">
+              <label class="lbl">Title <span class="req">*</span></label>
+              <input class="inp" id="f-title" placeholder="e.g. Operations Manager" oninput="markFilled(this)">
+            </div>
+          </div>
+          <div class="frow c3">
+            <div class="f">
+              <label class="lbl">Office Phone <span class="req">*</span></label>
+              <input class="inp" id="f-phone" type="tel" placeholder="(321) 000-0000" oninput="markFilled(this)">
+            </div>
+            <div class="f">
+              <label class="lbl">Cell / Mobile <span class="tip">(optional)</span></label>
+              <input class="inp" type="tel" placeholder="(321) 000-0000" oninput="markFilled(this)">
+            </div>
+            <div class="f">
+              <label class="lbl">Preferred Contact <span class="req">*</span></label>
+              <select class="sel">
+                <option>Email</option>
+                <option>Office Phone</option>
+                <option>Cell Phone</option>
+              </select>
+            </div>
+          </div>
+          <div class="frow c2">
+            <div class="f">
+              <label class="lbl">Contact Email <span class="req">*</span></label>
+              <input class="inp" id="f-email" type="email" placeholder="you@company.com" oninput="markFilled(this)">
+            </div>
+            <div class="f">
+              <label class="lbl">Confirm Email <span class="req">*</span></label>
+              <input class="inp" type="email" placeholder="Confirm email address" oninput="markFilled(this)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard-hdr"><div class="fcard-hdr-left"><span class="fcard-ico">🏗</span> Port Property Questions</div></div>
+        <div class="fcard-body">
+          <div class="frow">
+            <div class="f">
+              <label class="lbl">If you are a Service Provider, will services be performed on Port property? <span class="req">*</span></label>
+              <div class="radio-inline" style="margin-top:6px">
+                <label class="radio-opt" onclick="selectRadio(this,'portprop')"><input type="radio" name="portprop"> Yes — on Port property</label>
+                <label class="radio-opt" onclick="selectRadio(this,'portprop')"><input type="radio" name="portprop"> No — off-site only</label>
+                <label class="radio-opt" onclick="selectRadio(this,'portprop')"><input type="radio" name="portprop"> Not applicable</label>
+              </div>
+            </div>
+          </div>
+          <div class="frow">
+            <div class="f">
+              <label class="lbl">If Supplier or Manufacturer, will you be making deliveries on Port property? <span class="req">*</span></label>
+              <div class="radio-inline" style="margin-top:6px">
+                <label class="radio-opt" onclick="selectRadio(this,'portdel')"><input type="radio" name="portdel"> Yes — delivering to Port</label>
+                <label class="radio-opt" onclick="selectRadio(this,'portdel')"><input type="radio" name="portdel"> No</label>
+                <label class="radio-opt" onclick="selectRadio(this,'portdel')"><input type="radio" name="portdel"> Not applicable</label>
+              </div>
+            </div>
+          </div>
+          <div class="frow">
+            <div class="f">
+              <label class="lbl">Do you offer IoT devices, computer/network-controlled devices, software, or SaaS for installation or use? <span class="req">*</span></label>
+              <div class="radio-inline" style="margin-top:6px">
+                <label class="radio-opt" onclick="selectRadio(this,'iot')"><input type="radio" name="iot"> Yes <span style="font-size:11.5px;color:var(--g400);margin-left:3px">(IT questionnaire required)</span></label>
+                <label class="radio-opt" onclick="selectRadio(this,'iot')"><input type="radio" name="iot"> No</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard-hdr"><div class="fcard-hdr-left"><span class="fcard-ico">📋</span> Active Port Project</div><span style="font-size:11.5px;color:var(--g400)">If applicable</span></div>
+        <div class="fcard-body">
+          <div class="frow c2">
+            <div class="f">
+              <label class="lbl">Project Name</label>
+              <input class="inp" placeholder="e.g. CT10 Landside Improvements" oninput="markFilled(this)">
+              <div class="fhint">Required if working on a specific Port project — delays PO release if missing</div>
+            </div>
+            <div class="f">
+              <label class="lbl">Bid / RFP Number</label>
+              <input class="inp" placeholder="e.g. RFP-25-14" oninput="markFilled(this)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <div class="step-nav-left">
+          <button class="btn btn-ghost" onclick="goStep(1)">← Back</button>
+        </div>
+        <div class="step-nav-right">
+          <span class="step-counter">Step 2 of 6</span>
+          <button class="btn btn-primary" onclick="goStep(3)">Continue — Remit-To Address →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 3: Remit-To / Payment ═══ -->
+    <div class="step-page" id="step-3">
+      <div class="step-hdr">
+        <div class="step-hdr-row">
+          <div class="step-num-badge">3</div>
+          <h2>Remit-To Address &amp; Payment Information</h2>
+        </div>
+        <p>Where Port Canaveral should send your payments. This information will be synced to NetSuite for processing.</p>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard-hdr">
+          <div class="fcard-hdr-left"><span class="fcard-ico">💳</span> Remit-To Address</div>
+          <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--g600);cursor:pointer">
+            <input type="checkbox" style="accent-color:var(--sky)" onchange="showToast('📋','Remit-to address copied from physical address')"> Same as physical address
+          </label>
+        </div>
+        <div class="fcard-body">
+          <div class="notice blue" style="margin-bottom:16px">
+            <span class="notice-ico">ℹ</span>
+            <div class="notice-body">This is the mailing address where you would like payment checks or ACH remittances sent. It may differ from your physical office address.</div>
+          </div>
+          <div class="frow">
+            <div class="f">
+              <label class="lbl">Remit-To Address <span class="req">*</span></label>
+              <input class="inp" id="f-remit1" placeholder="PO Box or street address for payment" oninput="markFilled(this)">
+            </div>
+          </div>
+          <div class="frow c2">
+            <div class="f">
+              <label class="lbl">City <span class="req">*</span></label>
+              <input class="inp" id="f-remit-city" placeholder="City" oninput="markFilled(this)">
+            </div>
+            <div class="f">
+              <label class="lbl">State <span class="req">*</span></label>
+              <select class="sel">
+                <option value="">State</option>
+                <option>FL</option><option>GA</option><option>AL</option><option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="frow c2">
+            <div class="f">
+              <label class="lbl">ZIP Code <span class="req">*</span></label>
+              <input class="inp" placeholder="ZIP" oninput="markFilled(this)">
+            </div>
+            <div class="f">
+              <label class="lbl">Preferred Payment Method <span class="req">*</span></label>
+              <select class="sel">
+                <option value="">Select...</option>
+                <option>ACH / Direct Deposit (preferred)</option>
+                <option>Check</option>
+                <option>Wire Transfer</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard-hdr"><div class="fcard-hdr-left"><span class="fcard-ico">👤</span> Accounts Payable Contact</div><span style="font-size:11.5px;color:var(--g400)">For payment-related communications</span></div>
+        <div class="fcard-body">
+          <div class="frow c3">
+            <div class="f">
+              <label class="lbl">AP Contact Name</label>
+              <input class="inp" placeholder="Full name" oninput="markFilled(this)">
+            </div>
+            <div class="f">
+              <label class="lbl">AP Email</label>
+              <input class="inp" type="email" placeholder="ap@company.com" oninput="markFilled(this)">
+            </div>
+            <div class="f">
+              <label class="lbl">AP Phone</label>
+              <input class="inp" type="tel" placeholder="(321) 000-0000" oninput="markFilled(this)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <div class="step-nav-left"><button class="btn btn-ghost" onclick="goStep(2)">← Back</button></div>
+        <div class="step-nav-right">
+          <span class="step-counter">Step 3 of 6</span>
+          <button class="btn btn-primary" onclick="goStep(4)">Continue — Upload Documents →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 4: Documents ═══ -->
+    <div class="step-page" id="step-4">
+      <div class="step-hdr">
+        <div class="step-hdr-row">
+          <div class="step-num-badge">4</div>
+          <h2>Required Documents</h2>
+        </div>
+        <p>Upload your compliance documents. W-9 and COI are required before a PO or payment can be issued.</p>
+      </div>
+
+      <div class="notice red">
+        <span class="notice-ico">🚨</span>
+        <div class="notice-body">
+          <strong>PROOF OF INSURANCE MUST ACCOMPANY ALL VENDOR APPLICATIONS</strong> as required under the Guidelines for Insurance Coverage Requirements and Coverage Limits. <a>View requirements →</a>
+        </div>
+      </div>
+
+      <!-- COI -->
+      <div class="fcard">
+        <div class="fcard-hdr">
+          <div class="fcard-hdr-left"><span class="fcard-ico">🛡</span> Certificate of Insurance (COI) <span style="color:var(--red);margin-left:4px">*Required</span></div>
+          <a style="font-size:12px;color:var(--sky);cursor:pointer" onclick="showToast('📋','Insurance requirements opened')">View requirements →</a>
+        </div>
+        <div class="fcard-body">
+          <div class="notice amber" style="margin-bottom:14px">
+            <span class="notice-ico">⚠</span>
+            <div class="notice-body">ACORD form preferred. Must list <strong>Canaveral Port Authority, 445 Challenger Road, Cape Canaveral, FL 32920</strong> as <strong>Additional Insured</strong>. Missing or incorrect COI will delay your application.</div>
+          </div>
+          <div class="frow c2" style="margin-bottom:14px">
+            <div class="f">
+              <label class="lbl">Insurance Carrier <span class="req">*</span></label>
+              <input class="inp" id="f-ins-carrier" placeholder="e.g. Travelers, Nationwide" oninput="markFilled(this)">
+            </div>
+            <div class="f">
+              <label class="lbl">Policy Number <span class="req">*</span></label>
+              <input class="inp" id="f-ins-policy" placeholder="e.g. GL-2024-88441" oninput="markFilled(this)">
+            </div>
+          </div>
+          <div class="frow c2" style="margin-bottom:14px">
+            <div class="f">
+              <label class="lbl">Policy Effective Date <span class="req">*</span></label>
+              <input type="date" class="inp" oninput="markFilled(this)">
+            </div>
+            <div class="f">
+              <label class="lbl">Policy Expiration Date <span class="req">*</span></label>
+              <input type="date" class="inp" oninput="markFilled(this)">
+            </div>
+          </div>
+          <div class="f">
+            <label class="lbl">Upload COI Document <span class="req">*</span></label>
+            <div class="upload-zone" id="uz-coi" onclick="attachFile('uz-coi','fa-coi','COI_Document.pdf')">
+              <div class="uz-ico">📁</div>
+              <div class="uz-title">Click to upload or drag & drop</div>
+              <div class="uz-sub">ACORD form preferred · Max 10MB</div>
+              <div class="uz-types"><span class="uz-type">PDF</span><span class="uz-type">JPG</span><span class="uz-type">PNG</span></div>
+            </div>
+            <div class="file-attached" id="fa-coi">
+              <span class="fa-ico">📄</span>
+              <span class="fa-name">COI_Document.pdf</span>
+              <span class="fa-size">318 KB</span>
+              <span class="fa-del" onclick="removeFile('uz-coi','fa-coi')">✕</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- W-9 -->
+      <div class="fcard">
+        <div class="fcard-hdr">
+          <div class="fcard-hdr-left"><span class="fcard-ico">📄</span> W-9 Form (IRS) <span style="color:var(--red);margin-left:4px">*Required</span></div>
+          <a style="font-size:12px;color:var(--sky);cursor:pointer" onclick="showToast('📄','IRS W-9 Rev. Mar 2024 opened')">Download blank W-9 →</a>
+        </div>
+        <div class="fcard-body">
+          <div class="notice blue" style="margin-bottom:14px">
+            <span class="notice-ico">ℹ</span>
+            <div class="notice-body">Use the most recent IRS W-9 form (Rev. March 2024). The form must be signed and complete. TIN / EIN must match your company registration.</div>
+          </div>
+          <div class="f">
+            <label class="lbl">Upload Completed W-9 <span class="req">*</span></label>
+            <div class="upload-zone" id="uz-w9" onclick="attachFile('uz-w9','fa-w9','W9_Form_Completed.pdf')">
+              <div class="uz-ico">📎</div>
+              <div class="uz-title">Upload completed, signed W-9</div>
+              <div class="uz-sub">IRS Rev. March 2024 · PDF only · Max 10MB</div>
+              <div class="uz-types"><span class="uz-type">PDF</span></div>
+            </div>
+            <div class="file-attached" id="fa-w9">
+              <span class="fa-ico">📄</span>
+              <span class="fa-name">W9_Form_Completed.pdf</span>
+              <span class="fa-size">128 KB</span>
+              <span class="fa-del" onclick="removeFile('uz-w9','fa-w9')">✕</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional -->
+      <div class="fcard">
+        <div class="fcard-hdr">
+          <div class="fcard-hdr-left"><span class="fcard-ico">📁</span> Additional Documents</div>
+          <span style="font-size:11.5px;color:var(--g400)">Optional unless required for your vendor type</span>
+        </div>
+        <div class="fcard-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="f">
+              <label class="lbl">Business License / State License</label>
+              <div class="upload-zone" style="padding:16px" id="uz-lic" onclick="attachFile('uz-lic','fa-lic','Business_License.pdf')">
+                <div style="font-size:22px">📜</div>
+                <div class="uz-title" style="font-size:12.5px">Upload License</div>
+                <div class="uz-sub">State / County / City license</div>
+              </div>
+              <div class="file-attached" id="fa-lic">
+                <span class="fa-ico">📄</span><span class="fa-name">Business_License.pdf</span>
+                <span class="fa-size">94 KB</span>
+                <span class="fa-del" onclick="removeFile('uz-lic','fa-lic')">✕</span>
+              </div>
+            </div>
+            <div class="f">
+              <label class="lbl">IT / Cyber Security Questionnaire <span class="tip">(if IoT/SaaS)</span></label>
+              <div class="upload-zone" style="padding:16px" id="uz-cyber" onclick="attachFile('uz-cyber','fa-cyber','Cyber_Questionnaire.pdf')">
+                <div style="font-size:22px">🔒</div>
+                <div class="uz-title" style="font-size:12.5px">Upload Questionnaire</div>
+                <div class="uz-sub">Required if IoT/SaaS/networked devices</div>
+              </div>
+              <div class="file-attached" id="fa-cyber">
+                <span class="fa-ico">📄</span><span class="fa-name">Cyber_Questionnaire.pdf</span>
+                <span class="fa-size">201 KB</span>
+                <span class="fa-del" onclick="removeFile('uz-cyber','fa-cyber')">✕</span>
+              </div>
+            </div>
+          </div>
+          <div class="f" style="margin-top:14px">
+            <label class="lbl">Other Supporting Documents</label>
+            <div class="upload-zone" id="uz-other" onclick="attachFile('uz-other','fa-other','Supporting_Docs.pdf')">
+              <div class="uz-ico">📁</div>
+              <div class="uz-title">Upload additional documents</div>
+              <div class="uz-sub">Certifications, references, completed PDF application form, etc.</div>
+              <div class="uz-types"><span class="uz-type">PDF</span><span class="uz-type">DOC</span><span class="uz-type">XLS</span><span class="uz-type">JPG</span></div>
+            </div>
+            <div class="file-attached" id="fa-other">
+              <span class="fa-ico">📄</span><span class="fa-name">Supporting_Docs.pdf</span>
+              <span class="fa-size">512 KB</span>
+              <span class="fa-del" onclick="removeFile('uz-other','fa-other')">✕</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <div class="step-nav-left"><button class="btn btn-ghost" onclick="goStep(3)">← Back</button></div>
+        <div class="step-nav-right">
+          <span class="step-counter">Step 4 of 6</span>
+          <button class="btn btn-primary" onclick="goStep(5)">Continue — Disclosure →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 5: Disclosure & Agreement ═══ -->
+    <div class="step-page" id="step-5">
+      <div class="step-hdr">
+        <div class="step-hdr-row">
+          <div class="step-num-badge">5</div>
+          <h2>Vendor Disclosure &amp; Agreement</h2>
+        </div>
+        <p>Please complete the disclosure and review the terms before submitting your application.</p>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard-hdr"><div class="fcard-hdr-left"><span class="fcard-ico">⚠</span> Conflict of Interest Disclosure</div></div>
+        <div class="fcard-body">
+          <div class="notice amber" style="margin-bottom:16px">
+            <span class="notice-ico">⚠</span>
+            <div class="notice-body">
+              <strong>REQUIRED DISCLOSURE:</strong> If any officers or principals of your company are employees of the Canaveral Port Authority and/or related to an employee or elected official of the CPA in any capacity, you must disclose this below. <strong>Knowingly withholding this information may result in vendor disqualification.</strong>
+            </div>
+          </div>
+          <div class="frow c2">
+            <div class="f">
+              <label class="lbl">Name(s) of CPA-affiliated person(s)</label>
+              <input class="inp" placeholder="Full name of CPA employee or official" oninput="markFilled(this)">
+              <div class="fhint">Leave blank if not applicable</div>
+            </div>
+            <div class="f">
+              <label class="lbl">Nature of Relationship</label>
+              <input class="inp" placeholder="e.g. spouse, sibling, business partner" oninput="markFilled(this)">
+            </div>
+          </div>
+          <div style="margin-top:10px">
+            <label class="check-item" onclick="toggleCheck(this)" id="ci-nodisclosure">
+              <input type="checkbox" id="chk-nodisclosure">
+              <div>
+                <div class="check-label">No conflicts to declare</div>
+                <div class="check-sub">I certify that no officers or principals of my company have any affiliation with CPA employees or elected officials</div>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="fcard">
+        <div class="fcard-hdr"><div class="fcard-hdr-left"><span class="fcard-ico">📋</span> Terms &amp; Conditions</div></div>
+        <div class="fcard-body">
+          <div style="background:var(--g50);border:1px solid var(--g200);border-radius:var(--r);padding:16px;font-size:12.5px;color:var(--g600);line-height:1.8;max-height:130px;overflow-y:auto;margin-bottom:14px">
+            By submitting this vendor application, you acknowledge that you have read and agree to the Canaveral Port Authority's Terms and Conditions (PO-TCI), which may be updated from time to time. You certify that all information provided in this application is accurate, complete, and truthful. You understand that proof of insurance must accompany this application as required under CPA's Insurance Coverage Requirements and Coverage Limits. You agree that Canaveral Port Authority shall have the right to retrieve stored data and files during and after any contract period. Submission of this application does not guarantee vendor approval or award of any contract or purchase order. CPA reserves the right to reject any application.
+          </div>
+          <div class="check-list">
+            <label class="check-item" onclick="toggleCheck(this)" id="chk-wrap-1">
+              <input type="checkbox" id="chk-terms">
+              <div>
+                <div class="check-label">I have read and agree to the CPA <a style="color:var(--sky);cursor:pointer" onclick="event.stopPropagation();showToast('📋','Terms opened')">Purchase Order Terms &amp; Conditions (PO-TCI v2019+)</a></div>
+              </div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+              <input type="checkbox">
+              <div>
+                <div class="check-label">I certify that all information in this application is accurate and complete</div>
+              </div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+              <input type="checkbox">
+              <div>
+                <div class="check-label">I understand that missing information or documents may delay processing of my application</div>
+              </div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+              <input type="checkbox">
+              <div>
+                <div class="check-label">I acknowledge CPA's insurance requirements and will maintain required coverage throughout any active vendor period</div>
+              </div>
+            </label>
+            <label class="check-item" onclick="toggleCheck(this)">
+              <input type="checkbox">
+              <div>
+                <div class="check-label">I authorize CPA to verify the information provided in this application</div>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <div class="step-nav-left"><button class="btn btn-ghost" onclick="goStep(4)">← Back</button></div>
+        <div class="step-nav-right">
+          <span class="step-counter">Step 5 of 6</span>
+          <button class="btn btn-primary" onclick="goStep(6)">Continue — Review &amp; Submit →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 6: Review & Submit ═══ -->
+    <div class="step-page" id="step-6">
+      <div class="step-hdr">
+        <div class="step-hdr-row">
+          <div class="step-num-badge" style="background:linear-gradient(135deg,var(--green),var(--teal))">✓</div>
+          <h2>Review &amp; Submit Application</h2>
+        </div>
+        <p>Review all your information before submitting. Click any section to go back and edit.</p>
+      </div>
+
+      <div class="notice green" style="margin-bottom:20px">
+        <span class="notice-ico">✅</span>
+        <div class="notice-body"><strong>Looking good!</strong> All required fields have been completed. Review your information below and submit when ready.</div>
+      </div>
+
+      <!-- REVIEW: COMPANY -->
+      <div class="fcard">
+        <div class="fcard-hdr">
+          <div class="fcard-hdr-left"><span class="fcard-ico">🏢</span> Company Information</div>
+          <button class="btn btn-ghost" style="font-size:12px;padding:4px 10px" onclick="goStep(1)">✏ Edit</button>
+        </div>
+        <div class="fcard-body">
+          <div class="review-grid">
+            <div class="rv-field"><div class="rv-label">Company Name</div><div class="rv-val">SpaceCoast Electric LLC</div></div>
+            <div class="rv-field"><div class="rv-label">Federal Tax ID</div><div class="rv-val mono">59-1234567</div></div>
+            <div class="rv-field"><div class="rv-label">Business Type</div><div class="rv-val">Service Provider</div></div>
+            <div class="rv-field"><div class="rv-label">NIGP Code</div><div class="rv-val mono">962 — Electrical Contractors</div></div>
+            <div class="rv-field"><div class="rv-label">State of Incorporation</div><div class="rv-val">Florida</div></div>
+            <div class="rv-field"><div class="rv-label">Years in Business</div><div class="rv-val">10+ years</div></div>
+            <div class="rv-field" style="grid-column:span 2"><div class="rv-label">Services Description</div><div class="rv-val" style="font-size:12.5px;color:var(--g600)">Licensed electrical contractor providing installation, maintenance and repair services for commercial and industrial facilities. Specializes in marine port infrastructure, dock lighting, and high-voltage systems.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REVIEW: ADDRESS -->
+      <div class="fcard">
+        <div class="fcard-hdr">
+          <div class="fcard-hdr-left"><span class="fcard-ico">📍</span> Address &amp; Contact</div>
+          <button class="btn btn-ghost" style="font-size:12px;padding:4px 10px" onclick="goStep(2)">✏ Edit</button>
+        </div>
+        <div class="fcard-body">
+          <div class="review-grid">
+            <div class="rv-field"><div class="rv-label">Physical Address</div><div class="rv-val">1200 N Atlantic Ave, Cocoa Beach, FL 32931</div></div>
+            <div class="rv-field"><div class="rv-label">Primary Contact</div><div class="rv-val">Marcus Webb — Operations Manager</div></div>
+            <div class="rv-field"><div class="rv-label">Contact Email</div><div class="rv-val mono">m.webb@scelectric.com</div></div>
+            <div class="rv-field"><div class="rv-label">Office Phone</div><div class="rv-val">(321) 445-8801</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REVIEW: PAYMENT -->
+      <div class="fcard">
+        <div class="fcard-hdr">
+          <div class="fcard-hdr-left"><span class="fcard-ico">💳</span> Remit-To &amp; Payment</div>
+          <button class="btn btn-ghost" style="font-size:12px;padding:4px 10px" onclick="goStep(3)">✏ Edit</button>
+        </div>
+        <div class="fcard-body">
+          <div class="review-grid">
+            <div class="rv-field"><div class="rv-label">Remit-To Address</div><div class="rv-val">PO Box 4411, Melbourne, FL 32902</div></div>
+            <div class="rv-field"><div class="rv-label">Preferred Payment</div><div class="rv-val">ACH / Direct Deposit</div></div>
+            <div class="rv-field"><div class="rv-label">AP Contact</div><div class="rv-val">Lisa Webb — ap@scelectric.com</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REVIEW: DOCUMENTS -->
+      <div class="fcard">
+        <div class="fcard-hdr">
+          <div class="fcard-hdr-left"><span class="fcard-ico">📁</span> Documents</div>
+          <button class="btn btn-ghost" style="font-size:12px;padding:4px 10px" onclick="goStep(4)">✏ Edit</button>
+        </div>
+        <div class="fcard-body">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px;padding:8px 12px;background:var(--green-bg);border:1px solid #86efac;border-radius:var(--r)">
+              <span>✅</span><span style="flex:1;font-weight:500;color:var(--green)">COI_Document.pdf</span><span style="font-size:11.5px;color:var(--g400)">Certificate of Insurance · 318 KB</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px;padding:8px 12px;background:var(--green-bg);border:1px solid #86efac;border-radius:var(--r)">
+              <span>✅</span><span style="flex:1;font-weight:500;color:var(--green)">W9_Form_Completed.pdf</span><span style="font-size:11.5px;color:var(--g400)">IRS W-9 · 128 KB</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px;padding:8px 12px;background:var(--green-bg);border:1px solid #86efac;border-radius:var(--r)">
+              <span>✅</span><span style="flex:1;font-weight:500;color:var(--green)">Business_License.pdf</span><span style="font-size:11.5px;color:var(--g400)">State License · 94 KB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FINAL SUBMIT -->
+      <div style="background:var(--white);border:2px solid var(--sky-mid);border-radius:8px;padding:24px;text-align:center;margin-top:4px">
+        <div style="font-size:15px;font-weight:700;color:var(--g900);margin-bottom:6px">Ready to submit your application?</div>
+        <div style="font-size:13px;color:var(--g500);margin-bottom:20px">By clicking Submit, you confirm all information is accurate and you agree to CPA's Terms &amp; Conditions.</div>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-ghost" onclick="goStep(5)">← Go Back</button>
+          <button class="btn btn-primary btn-lg" onclick="submitApplication()" style="background:linear-gradient(135deg,var(--sky),var(--blue))">
+            📤 Submit Vendor Application
+          </button>
+        </div>
+        <div style="font-size:12px;color:var(--g400);margin-top:14px">After submission you will receive a confirmation email at m.webb@scelectric.com · Processing typically takes 5–10 business days</div>
+      </div>
+
+      <div class="step-nav" style="border-top:none;margin-top:10px;justify-content:flex-start">
+        <div class="step-nav-left"><button class="btn btn-ghost" onclick="goStep(5)">← Back to Disclosure</button></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═══════ SUCCESS SCREEN ═══════ -->
+<div id="success-screen">
+  <div class="success-card">
+    <div class="success-icon">🎉</div>
+    <h2>Application Submitted!</h2>
+    <p>Thank you, <strong>SpaceCoast Electric LLC</strong>! Your vendor application has been received by Canaveral Port Authority's Purchasing Services. You will receive a confirmation email shortly.</p>
+
+    <div class="success-ref">
+      <div class="sr-row"><span class="sr-label">Application Reference</span><span class="sr-val">APP-2026-0214</span></div>
+      <div class="sr-row"><span class="sr-label">Submitted</span><span class="sr-val">Mar 09, 2026 · 10:42 AM</span></div>
+      <div class="sr-row"><span class="sr-label">Submitted By</span><span class="sr-val">Marcus Webb</span></div>
+      <div class="sr-row"><span class="sr-label">Email Confirmation</span><span class="sr-val">m.webb@scelectric.com</span></div>
+      <div class="sr-row"><span class="sr-label">Estimated Processing</span><span class="sr-val">5–10 business days</span></div>
+    </div>
+
+    <div style="font-size:13.5px;font-weight:600;color:var(--g700);margin-bottom:12px">What happens next?</div>
+    <div class="success-wf">
+      <div class="swf-step">
+        <div class="swf-dot swf-active">✓</div>
+        <div class="swf-label">Application Submitted</div>
+      </div>
+      <div class="swf-step">
+        <div class="swf-dot swf-active">1</div>
+        <div class="swf-label">Purchasing Review</div>
+      </div>
+      <div class="swf-step">
+        <div class="swf-dot swf-wait">2</div>
+        <div class="swf-label">Risk Assessment</div>
+      </div>
+      <div class="swf-step">
+        <div class="swf-dot swf-wait">3</div>
+        <div class="swf-label">IT Security</div>
+      </div>
+      <div class="swf-step">
+        <div class="swf-dot swf-wait">✓</div>
+        <div class="swf-label">Activated!</div>
+      </div>
+    </div>
+
+    <div style="background:var(--sky-light);border:1px solid var(--sky-mid);border-radius:var(--r);padding:12px 16px;font-size:12.5px;color:var(--blue);text-align:left;margin-top:16px">
+      <strong>📧 Check your email</strong> — A confirmation with your application reference number and next steps has been sent to m.webb@scelectric.com. You can also <a style="font-weight:700;cursor:pointer" onclick="showToast('🔗','Redirecting to vendor portal...')">track your application status</a> in the Vendor Portal.
+    </div>
+
+    <div class="success-btns">
+      <button class="btn btn-outline" onclick="showToast('📤','Application PDF downloading...')">📥 Download PDF Copy</button>
+      <button class="btn btn-primary" onclick="window.location.reload()">← Start New Application</button>
+    </div>
+
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--g100);font-size:12px;color:var(--g400)">
+      Questions? Contact Purchasing Services at <strong>(321) 783-7831</strong> or visit
+      <a style="color:var(--sky);cursor:pointer">portcanaveral.com/business/vendor-services</a>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═════════════════════════════════════════
+//  APPLICATION FLOW JS
+// ═════════════════════════════════════════
+
+const STEPS = [
+  { name: 'Company Info',        sub: 'Name, type, NIGP code',       checks: ['Company name', 'Business type', 'NIGP code', 'Services description'] },
+  { name: 'Physical Address',    sub: 'Address & primary contact',   checks: ['Street address', 'City / State / ZIP', 'Primary contact', 'Contact email'] },
+  { name: 'Remit-To Address',    sub: 'Payment & AP contact',        checks: ['Remit-to address', 'Preferred payment method'] },
+  { name: 'Documents',           sub: 'COI, W-9, licenses',          checks: ['Certificate of Insurance', 'W-9 Form (IRS)'] },
+  { name: 'Disclosure',          sub: 'Conflict of interest & terms', checks: ['Disclosure completed', 'Terms accepted'] },
+  { name: 'Review & Submit',     sub: 'Final review',                checks: [] }
+];
+
+let currentStep = 1;
+const stepStatus = {}; // 1=wait, 2=active, 3=done
+
+function buildSidebar() {
+  const el = document.getElementById('pp-steps');
+  let html = '';
+  STEPS.forEach((s, i) => {
+    const n = i + 1;
+    const isDone = n < currentStep;
+    const isActive = n === currentStep;
+    let siClass = isDone ? 'si-done' : isActive ? 'si-active' : 'si-wait';
+    let siContent = isDone ? '✓' : n;
+    let stepClass = isActive ? 'active' : '';
+
+    html += `<div class="pp-step ${stepClass}" onclick="goStep(${n})">
+      <div class="pp-step-indicator ${siClass}">${siContent}</div>
+      <div class="pp-step-text">
+        <div class="pp-step-name">${s.name}</div>
+        <div class="pp-step-sub">${s.sub}</div>
+      </div>
+    </div>`;
+    if (n < STEPS.length) {
+      html += `<div class="pp-connector ${isDone ? 'done' : ''}"></div>`;
+    }
+  });
+  el.innerHTML = html;
+}
+
+function updateProgress() {
+  const pct = Math.round(((currentStep - 1) / STEPS.length) * 100);
+  const done = currentStep - 1;
+
+  // Ring
+  const circ = 131.9;
+  const offset = circ - (circ * pct / 100);
+  document.getElementById('ring-fill').style.strokeDashoffset = offset;
+  document.getElementById('ring-pct').textContent = pct + '%';
+
+  // Bar
+  document.getElementById('bar-fill').style.width = pct + '%';
+  document.getElementById('bar-left').textContent = done + ' of ' + STEPS.length + ' complete';
+  document.getElementById('bar-right').textContent = pct + '%';
+
+  // Names
+  const s = STEPS[currentStep - 1];
+  document.getElementById('pp-step-name').textContent = s.name;
+  document.getElementById('pp-step-sub').textContent = 'Step ' + currentStep + ' of ' + STEPS.length;
+}
+
+function goStep(n) {
+  if (n < 1 || n > STEPS.length) return;
+  // Hide all
+  document.querySelectorAll('.step-page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('step-' + n);
+  if (target) target.classList.add('active');
+  currentStep = n;
+  buildSidebar();
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Toggle check items ──
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+}
+
+// ── Radio select ──
+function selectRadio(el, group) {
+  document.querySelectorAll('.radio-opt input[name="' + group + '"]').forEach(r => {
+    r.closest('.radio-opt').classList.remove('selected');
+  });
+  el.classList.add('selected');
+}
+
+// ── Mark filled inputs ──
+function markFilled(el) {
+  if (el.value.trim()) el.classList.add('filled');
+  else el.classList.remove('filled');
+}
+
+// ── File upload simulation ──
+function attachFile(zoneId, faId, filename) {
+  const zone = document.getElementById(zoneId);
+  const fa = document.getElementById(faId);
+  zone.classList.add('has-file');
+  zone.innerHTML = `<div class="uz-ico">✅</div><div class="uz-title" style="color:var(--green)">File selected</div><div class="uz-sub">${filename}</div>`;
+  fa.classList.add('show');
+  showToast('📎', filename + ' attached');
+}
+
+function removeFile(zoneId, faId) {
+  const zone = document.getElementById(zoneId);
+  const fa = document.getElementById(faId);
+  zone.classList.remove('has-file');
+  // Reset zone content based on id
+  const icons = { 'uz-coi':'📁','uz-w9':'📎','uz-lic':'📜','uz-cyber':'🔒','uz-other':'📁' };
+  const titles = { 'uz-coi':'Click to upload or drag & drop','uz-w9':'Upload completed, signed W-9','uz-lic':'Upload License','uz-cyber':'Upload Questionnaire','uz-other':'Upload additional documents' };
+  const subs = { 'uz-coi':'ACORD form preferred · Max 10MB','uz-w9':'IRS Rev. March 2024 · PDF only · Max 10MB','uz-lic':'State / County / City license','uz-cyber':'Required if IoT/SaaS/networked devices','uz-other':'Certifications, references, etc.' };
+  zone.innerHTML = `<div class="uz-ico">${icons[zoneId]||'📁'}</div><div class="uz-title">${titles[zoneId]||'Click to upload'}</div><div class="uz-sub">${subs[zoneId]||''}</div><div class="uz-types"><span class="uz-type">PDF</span></div>`;
+  fa.classList.remove('show');
+}
+
+// ── Submit ──
+function submitApplication() {
+  // Animate submit
+  document.getElementById('app-body').style.display = 'none';
+  document.getElementById('success-screen').classList.add('show');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Save draft ──
+function saveDraft() {
+  showToast('💾', 'Draft saved — you can return anytime');
+}
+
+// ── Toast ──
+let toastT;
+function showToast(ico, msg) {
+  document.getElementById('ticon').textContent = ico;
+  document.getElementById('tmsg').textContent = msg;
+  const el = document.getElementById('toast');
+  el.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ── Init ──
+buildSidebar();
+updateProgress();
+</script>
+<!-- pvms-switcher:start -->
+<style>
+  .pvmsnav{
+    position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+    z-index:2147483000; display:flex; align-items:center; gap:4px;
+    padding:5px; border-radius:999px;
+    background:rgba(13,31,48,.93); backdrop-filter:blur(8px);
+    box-shadow:0 4px 12px rgba(13,31,48,.2), 0 16px 40px rgba(13,31,48,.28);
+    font:500 13px/1 "DM Sans",system-ui,-apple-system,Segoe UI,sans-serif;
+    max-width:calc(100vw - 24px); overflow:auto; -webkit-overflow-scrolling:touch;
+  }
+  .pvmsnav__home{
+    display:flex; align-items:center; gap:6px; flex:0 0 auto;
+    color:#9fc4ea; text-decoration:none; padding:8px 12px; border-radius:999px;
+    white-space:nowrap;
+  }
+  .pvmsnav__home:hover{color:#fff; background:rgba(255,255,255,.09)}
+  .pvmsnav__sep{width:1px; height:18px; background:rgba(255,255,255,.18); flex:0 0 auto}
+  .pvmsnav__link{
+    flex:0 0 auto; color:#d5e3f2; text-decoration:none; padding:8px 13px;
+    border-radius:999px; white-space:nowrap; transition:background .14s, color .14s;
+  }
+  .pvmsnav__link:hover{color:#fff; background:rgba(255,255,255,.11)}
+  .pvmsnav__link--on{color:#0d1f30; background:#fff}
+  .pvmsnav__link--on:hover{color:#0d1f30; background:#fff}
+  @media print{ .pvmsnav{display:none} }
+</style>
+<nav class="pvmsnav" aria-label="Prototype pages">
+  <a class="pvmsnav__home" href="/" title="All three entry points">&#8962; Overview</a>
+  <span class="pvmsnav__sep"></span>
+  
+  <a class="pvmsnav__link pvmsnav__link--on" href="/new-application" aria-current="page">New Application</a>
+  <a class="pvmsnav__link" href="/vendor-portal">Vendor Portal</a>
+  <a class="pvmsnav__link" href="/netsuite">NetSuite View</a>
+</nav>
+<!-- pvms-switcher:end -->
+</body>
+</html>

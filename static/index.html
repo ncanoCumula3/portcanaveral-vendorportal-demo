@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Port Canaveral · Preferred Vendor Management System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --port-blue:#1a5fa8; --port-blue-dark:#144a83; --port-blue-tint:#e8f0f9;
+    --g900:#0d1f30; --g700:#2e3d4d; --g600:#4a5a6a; --g500:#6b7d8f;
+    --g300:#c4cdd9; --g200:#dde3ed; --g100:#eef1f6; --g50:#f7f9fc;
+    --green:#1d8348; --green-bg:#eaf6ee; --amber:#b45309; --amber-bg:#fef3c7;
+    --radius:10px;
+    --shadow:0 1px 2px rgba(13,31,48,.06), 0 8px 24px rgba(13,31,48,.07);
+    --shadow-lift:0 2px 4px rgba(13,31,48,.08), 0 18px 40px rgba(13,31,48,.13);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; font-family:"DM Sans",system-ui,-apple-system,Segoe UI,sans-serif;
+    color:var(--g900); background:var(--g50); line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+  /* ---------------------------------------------------------------- header */
+  header{
+    background:linear-gradient(160deg,var(--port-blue) 0%,var(--port-blue-dark) 100%);
+    color:#fff; padding:52px 0 64px; position:relative; overflow:hidden;
+  }
+  header::after{
+    content:""; position:absolute; inset:auto -10% -60% 55%; height:220px;
+    background:radial-gradient(closest-side,rgba(255,255,255,.16),transparent);
+    pointer-events:none;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:"DM Mono",ui-monospace,monospace; font-size:11px; letter-spacing:.14em;
+    text-transform:uppercase; color:#cfe0f2;
+    border:1px solid rgba(255,255,255,.28); border-radius:999px; padding:5px 12px;
+    margin-bottom:20px;
+  }
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:#7fd3a1;display:block}
+  header h1{
+    margin:0 0 10px; font-size:clamp(1.7rem,3.6vw,2.5rem); font-weight:700;
+    letter-spacing:-.02em; line-height:1.2;
+  }
+  header p{margin:0; max-width:60ch; color:#dbe8f5; font-size:1.03rem}
+
+  /* ---------------------------------------------------------------- cards */
+  main{padding:0 0 64px}
+  .grid{
+    display:grid; gap:20px; margin-top:-32px;
+    grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+  }
+  .card{
+    display:flex; flex-direction:column; background:#fff; border:1px solid var(--g200);
+    border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;
+    transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+    text-decoration:none; color:inherit;
+  }
+  .card:hover,.card:focus-visible{
+    transform:translateY(-3px); box-shadow:var(--shadow-lift);
+    border-color:var(--port-blue); outline:none;
+  }
+  .card .top{padding:22px 22px 0}
+  .num{
+    font-family:"DM Mono",ui-monospace,monospace; font-size:11px; font-weight:500;
+    letter-spacing:.12em; color:var(--port-blue); background:var(--port-blue-tint);
+    border-radius:5px; padding:3px 8px; display:inline-block; margin-bottom:14px;
+  }
+  .card h2{margin:0 0 8px; font-size:1.16rem; font-weight:600; letter-spacing:-.01em}
+  .card p{margin:0 0 16px; color:var(--g600); font-size:.945rem}
+  .card ul{
+    margin:0; padding:0 0 20px 0; list-style:none;
+    border-top:1px solid var(--g100);
+  }
+  .card ul li{
+    display:flex; gap:9px; align-items:flex-start;
+    font-size:.875rem; color:var(--g700); padding:9px 22px 0;
+  }
+  .card ul li::before{
+    content:""; flex:0 0 auto; width:5px; height:5px; margin-top:8px;
+    border-radius:50%; background:var(--port-blue);
+  }
+  .go{
+    margin-top:auto; padding:14px 22px; background:var(--g50);
+    border-top:1px solid var(--g200); font-weight:600; font-size:.9rem;
+    color:var(--port-blue); display:flex; align-items:center; justify-content:space-between;
+  }
+  .go .arrow{transition:transform .16s ease}
+  .card:hover .go .arrow{transform:translateX(4px)}
+
+  /* ---------------------------------------------------------------- notes */
+  .note{
+    margin-top:34px; background:var(--amber-bg); border:1px solid #f5d98e;
+    border-left:3px solid var(--amber); border-radius:var(--radius);
+    padding:16px 20px; font-size:.9rem; color:#6b4506;
+  }
+  .note strong{color:#5a3a05}
+  footer{
+    border-top:1px solid var(--g200); background:#fff; padding:26px 0;
+    font-size:.85rem; color:var(--g500);
+  }
+  .foot{display:flex; flex-wrap:wrap; gap:10px 26px; align-items:center; justify-content:space-between}
+  footer a{color:var(--port-blue); text-decoration:none}
+  footer a:hover{text-decoration:underline}
+
+  @media (max-width:560px){
+    header{padding:38px 0 52px}
+    .grid{margin-top:-26px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="eyebrow"><span class="dot"></span>Prototype preview</span>
+    <h1>Preferred Vendor Management System</h1>
+    <p>Three connected screens covering the full vendor lifecycle, from a first
+       application through to an approved vendor working inside NetSuite. Click into
+       each one and use it as you would on the day.</p>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="grid">
+
+      <a class="card" href="/new-application">
+        <div class="top">
+          <span class="num">01 · INTAKE</span>
+          <h2>New Vendor Application</h2>
+          <p>What a prospective vendor sees. Guided, validated, and structured so the
+             information arrives complete the first time.</p>
+        </div>
+        <ul>
+          <li>Step by step company, contact and compliance capture</li>
+          <li>Insurance, W-9 and certification uploads</li>
+          <li>Validation before submission, not after</li>
+        </ul>
+        <div class="go"><span>Open the application</span><span class="arrow">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="/vendor-portal">
+        <div class="top">
+          <span class="num">02 · VENDOR</span>
+          <h2>Vendor Portal</h2>
+          <p>Where an approved vendor lives afterwards. Status, documents and renewals
+             in one place, so the Port stops chasing paperwork by email.</p>
+        </div>
+        <ul>
+          <li>Application status and approval history</li>
+          <li>Document library with expiry tracking</li>
+          <li>Self service updates and renewal reminders</li>
+        </ul>
+        <div class="go"><span>Open the portal</span><span class="arrow">&rarr;</span></div>
+      </a>
+
+      <a class="card" href="/netsuite">
+        <div class="top">
+          <span class="num">03 · PORT STAFF</span>
+          <h2>PVMS inside NetSuite</h2>
+          <p>The internal view. Review queue, scoring, approvals and reporting, native
+             to NetSuite rather than bolted alongside it.</p>
+        </div>
+        <ul>
+          <li>Review queue with status and ageing</li>
+          <li>Vendor record, scoring and approval workflow</li>
+          <li>Dashboards and compliance reporting</li>
+        </ul>
+        <div class="go"><span>Open the NetSuite view</span><span class="arrow">&rarr;</span></div>
+      </a>
+
+    </div>
+
+    <div class="note">
+      <strong>This is a prototype.</strong> The screens are fully clickable and the data
+      is illustrative sample data, not live Port records. Nothing you enter is saved or
+      submitted anywhere. Tell us what should change and it changes.
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span>Prepared for Canaveral Port Authority by Cumula 3 Group, LLC.</span>
+    <span>Private preview &middot; <a href="/">All three entry points</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

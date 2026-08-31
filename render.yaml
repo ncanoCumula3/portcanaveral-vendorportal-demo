@@ -1,0 +1,28 @@
+# Render blueprint for the Port Canaveral PVMS prototype preview.
+#
+# This is a web service, not a Render Static Site, because Static Sites cannot do
+# HTTP Basic Auth and this preview has to be private. It still serves nothing but
+# static files, from static/, with no database and no state.
+#
+# PVMS_USER and PVMS_PASSWORD are sync:false, so they are never committed. Render
+# prompts for them on the first deploy and stores them as service environment
+# variables. The service refuses to start if either is missing.
+services:
+  - type: web
+    name: pvms-preview
+    runtime: python
+    plan: starter
+    region: ohio
+    branch: main
+    # No dependencies, the server is standard library only.
+    buildCommand: "python -m compileall -q server.py build.py"
+    startCommand: "python server.py"
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.6"
+      - key: PVMS_USER
+        sync: false
+      - key: PVMS_PASSWORD
+        sync: false
