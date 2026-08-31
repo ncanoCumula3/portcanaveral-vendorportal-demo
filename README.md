@@ -9,7 +9,7 @@ to click through before signing.
 | `/vendor-portal` | Vendor Portal | `pvms-vendor-portal.html` |
 | `/netsuite` | PVMS inside NetSuite | `pvms-netsuite_1.html` |
 | `/` | Landing page linking all three | hand written |
-| `/healthz` | Health check, no auth | |
+| `/healthz` | Liveness, also behind the credential | |
 
 Short aliases also resolve, so a pasted or half remembered URL still lands:
 `/apply`, `/application`, `/new`, `/portal`, `/vendor`, `/pvms`, and any of the
@@ -49,6 +49,29 @@ the output is stable no matter how many times it runs. When a mockup is updated,
 drop the new file in `~/Downloads` under the same name and rebuild.
 
 `static/index.html` is the landing page. It is hand written and is not regenerated.
+
+## Live
+
+https://portcanaveral-vendorportal-demo.onrender.com
+
+Render service `portcanaveral-vendorportal-demo`, Oakmorelabs workspace, Ohio,
+starter plan, one instance. Every route including `/healthz` is behind the
+credential, so the service has no health check path and Render marks it live on the
+port binding. A path based health check on a single instance was producing
+intermittent `x-render-routing: no-server` 404s at the edge; removing it stopped them.
+
+The repository is public so Render can fetch it without the GitHub App. No
+credentials are in it: `PVMS_USER` and `PVMS_PASSWORD` exist only as Render service
+environment variables.
+
+Auto deploy does not fire from a public repo without the GitHub App webhook. Deploy a
+change with:
+
+```bash
+curl -sS -X POST "https://api.render.com/v1/services/srv-daaq3pp5efls73b4hr8g/deploys" \
+  -H "Authorization: Bearer $RENDER_API_KEY" -H "Content-Type: application/json" \
+  -d '{"clearCache":"do_not_clear"}'
+```
 
 ## Deploy
 
