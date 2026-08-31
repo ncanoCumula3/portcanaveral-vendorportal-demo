@@ -1501,7 +1501,18 @@ updateProgress();
   .pvmsnav__link:hover{color:#fff; background:rgba(255,255,255,.11)}
   .pvmsnav__link--on{color:#0d1f30; background:#fff}
   .pvmsnav__link--on:hover{color:#0d1f30; background:#fff}
-  @media print{ .pvmsnav{display:none} }
+  .pvmstoast{
+    position:fixed; left:50%; bottom:74px; transform:translate(-50%,8px);
+    z-index:2147483000; max-width:min(460px,calc(100vw - 32px));
+    padding:11px 16px; border-radius:9px;
+    background:#0d1f30; color:#e8f0f9; border:1px solid rgba(255,255,255,.14);
+    box-shadow:0 10px 30px rgba(13,31,48,.3);
+    font:400 13px/1.45 "DM Sans",system-ui,-apple-system,Segoe UI,sans-serif;
+    text-align:center; opacity:0; pointer-events:none;
+    transition:opacity .18s ease, transform .18s ease;
+  }
+  .pvmstoast--on{opacity:1; transform:translate(-50%,0)}
+  @media print{ .pvmsnav,.pvmstoast{display:none} }
 </style>
 <nav class="pvmsnav" aria-label="Prototype pages">
   <a class="pvmsnav__home" href="/" title="All three entry points">&#8962; Overview</a>
@@ -1511,6 +1522,40 @@ updateProgress();
   <a class="pvmsnav__link" href="/vendor-portal">Vendor Portal</a>
   <a class="pvmsnav__link" href="/netsuite">NetSuite View</a>
 </nav>
+<div class="pvmstoast" role="status" aria-live="polite"></div>
+<script>
+/* Not every control in a prototype is wired, and a click that silently does nothing
+   reads as broken. This watches for exactly that: click, wait a beat, and if the page
+   did not change, navigate or scroll, say so plainly. Anything that does work is
+   untouched, because the toast only fires when nothing at all happened. */
+(function () {
+  var el = document.querySelector('.pvmstoast'), timer;
+  function fingerprint() {
+    var h = function (s) { var x = 5381, i; for (i = 0; i < s.length; i++) { x = ((x * 33) ^ s.charCodeAt(i)) >>> 0; } return x; };
+    var marked = [].slice.call(document.querySelectorAll('[class*=active],[class*=selected],[aria-selected],[aria-current]'))
+      .map(function (n) { return n.className + n.getAttribute('aria-selected') + n.getAttribute('aria-current'); }).join('|');
+    return h(document.body.innerHTML) + ':' + h(marked);
+  }
+  function toast(msg) {
+    el.textContent = msg;
+    el.classList.add('pvmstoast--on');
+    clearTimeout(timer);
+    timer = setTimeout(function () { el.classList.remove('pvmstoast--on'); }, 2600);
+  }
+  document.addEventListener('click', function (ev) {
+    var t = ev.target.closest('a,button,[onclick],[role=button],[role=tab]');
+    if (!t || t.closest('.pvmsnav')) return;
+    if (t.disabled || t.getAttribute('aria-disabled') === 'true') return;
+    var before = fingerprint(), y = window.scrollY, url = location.href;
+    setTimeout(function () {
+      if (location.href !== url) return;
+      if (fingerprint() !== before) return;
+      if (window.scrollY !== y) return;
+      toast('Not wired up in this prototype yet. Tell us if you need it and it gets built.');
+    }, 260);
+  }, true);
+})();
+</script>
 <!-- pvms-switcher:end -->
 </body>
 </html>
