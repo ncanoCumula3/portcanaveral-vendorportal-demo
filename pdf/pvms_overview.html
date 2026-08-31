@@ -13,15 +13,15 @@
   *{box-sizing:border-box}
   body{
     margin:0; font-family:Helvetica,Arial,sans-serif; color:var(--ink);
-    font-size:10.2pt; line-height:1.52; -webkit-print-color-adjust:exact;
+    font-size:10pt; line-height:1.46; -webkit-print-color-adjust:exact;
     print-color-adjust:exact;
   }
   h1,h2,h3{margin:0; font-weight:bold; color:var(--navy); letter-spacing:-.01em}
 
   /* ---------------------------------------------------------------- masthead */
   .masthead{
-    background:var(--navy); color:#fff; padding:22px 24px 20px;
-    margin:0 0 22px; position:relative;
+    background:var(--navy); color:#fff; padding:18px 24px 16px;
+    margin:0 0 16px; position:relative;
   }
   .masthead::after{
     content:""; position:absolute; left:0; right:0; bottom:0; height:3px;
@@ -31,7 +31,7 @@
     font-size:8.2pt; letter-spacing:.22em; text-transform:uppercase;
     color:var(--amber); margin-bottom:12px;
   }
-  .masthead h1{color:#fff; font-size:21pt; line-height:1.15; margin-bottom:6px}
+  .masthead h1{color:#fff; font-size:19pt; line-height:1.15; margin-bottom:5px}
   .masthead .sub{color:#b9cbe0; font-size:10.5pt}
   .meta{
     margin-top:14px; padding-top:11px; border-top:1px solid rgba(255,255,255,.16);
@@ -40,15 +40,41 @@
   .meta b{color:#e4edf6; font-weight:normal; display:block; font-size:9.4pt}
 
   /* ---------------------------------------------------------------- structure */
-  .sec{margin:0 0 18px; page-break-inside:avoid}
+  .sec{margin:0 0 12px}
+  .sec > h2{page-break-after:avoid}
   .sec > h2{
     font-size:12pt; padding-bottom:5px; margin-bottom:10px;
     border-bottom:1.5px solid var(--line);
   }
   .sec > h2 span{color:var(--amber); margin-right:7px}
-  p{margin:0 0 9px}
-  .lede{font-size:10.8pt; color:var(--mid); margin-bottom:14px}
+  p{margin:0 0 7px}
+  .lede{font-size:10.3pt; color:var(--mid); margin-bottom:10px}
 
+  .rows{margin:0 0 4px}
+  .r{
+    display:flex; gap:0; border:1px solid var(--line); background:var(--panel);
+    margin-bottom:7px; page-break-inside:avoid;
+  }
+  .rn{
+    flex:0 0 92px; background:var(--navy); color:#fff; padding:11px 10px;
+    text-align:center; font-size:7.6pt; letter-spacing:.14em; text-transform:uppercase;
+  }
+  .rn span{
+    display:block; font-size:17pt; letter-spacing:0; color:var(--amber);
+    line-height:1.1; margin-bottom:2px;
+  }
+  .rc{padding:9px 14px 10px}
+  .rc h3{font-size:11pt; margin-bottom:5px}
+  .rc p{font-size:9pt; color:var(--mid); margin:0 0 6px}
+  .rc ul{margin:0; padding:0; list-style:none}
+  .rc li{
+    font-size:8.8pt; color:var(--ink); padding-left:11px; position:relative;
+    margin-bottom:2.5px;
+  }
+  .rc li::before{
+    content:""; position:absolute; left:0; top:6px; width:3.5px; height:3.5px;
+    background:var(--blue); border-radius:50%;
+  }
   .cards{display:flex; gap:11px; margin:0 0 4px}
   .c{
     flex:1; border:1px solid var(--line); border-top:3px solid var(--blue);
@@ -80,7 +106,7 @@
   td.k{color:var(--ink); font-weight:bold; white-space:nowrap; width:31%}
   .tick{color:#1d8348; font-weight:bold}
 
-  .flow{display:flex; align-items:stretch; gap:0; margin:2px 0 8px}
+  .flow{display:flex; align-items:stretch; gap:0; margin:2px 0 4px}
   .step{
     flex:1; background:var(--panel); border:1px solid var(--line);
     padding:9px 11px; position:relative;
@@ -91,7 +117,7 @@
   .step .d{font-size:8.5pt; color:var(--mid); line-height:1.4}
 
   .panel{
-    background:var(--navy); color:#dbe7f3; padding:15px 18px; margin:4px 0 0;
+    background:var(--navy); color:#dbe7f3; padding:13px 18px; margin:2px 0 0;
     page-break-inside:avoid;
   }
   .panel h2{color:#fff; font-size:11.5pt; margin-bottom:4px}
@@ -142,43 +168,68 @@
 
 <div class="sec">
   <h2><span>&#9632;</span>The three components</h2>
-  <div class="cards">
-    <div class="c">
-      <div class="n">01 &middot; Intake</div>
-      <h3>New Vendor Application</h3>
-      <p>What a prospective vendor sees. Guided and validated so information arrives
-         complete the first time.</p>
-      <ul>
-        <li>Company, contact and compliance capture</li>
-        <li>Insurance, W-9 and certification upload</li>
-        <li>NIGP commodity code selection</li>
-        <li>Validation before submission, not after</li>
-      </ul>
+  <div class="rows">
+
+    <div class="r">
+      <div class="rn"><span>01</span>Intake</div>
+      <div class="rc">
+        <h3>New Vendor Application</h3>
+        <p>The form a prospective vendor fills in, and the first place the Port either
+          saves or loses time. It asks for company details, ownership, contacts,
+          insurance, W-9 and the NIGP commodity codes the vendor wants to be considered
+          for, in a defined order with the rules applied as they type. A vendor cannot
+          submit an application that is missing a required certificate or an expired
+          COI, so the incomplete submission that today generates three rounds of email
+          simply never arrives.</p>
+        <ul>
+          <li>Company, ownership, contact and compliance capture in a guided sequence</li>
+          <li>Insurance certificate, W-9 and small or disadvantaged business certification upload</li>
+          <li>NIGP commodity code selection, so the vendor is searchable from day one</li>
+          <li>Validation at the point of entry rather than at the point of review</li>
+        </ul>
+      </div>
     </div>
-    <div class="c">
-      <div class="n">02 &middot; Vendor</div>
-      <h3>Vendor Portal</h3>
-      <p>Where an approved vendor lives afterwards, so the Port stops chasing paperwork
-         by email.</p>
-      <ul>
-        <li>Application status and approval history</li>
-        <li>Document library with expiry tracking</li>
-        <li>Purchase orders, bills and payment history</li>
-        <li>Self service renewal before expiry</li>
-      </ul>
+
+    <div class="r">
+      <div class="rn"><span>02</span>Vendor</div>
+      <div class="rc">
+        <h3>Vendor Portal</h3>
+        <p>Where an approved vendor lives for the rest of the relationship. They see
+          where their application stands, which of their documents are current and which
+          are about to lapse, their open purchase orders, their submitted bills and what
+          the Port has paid. When a certificate is close to expiry the vendor is
+          prompted and replaces it themselves. That single behaviour removes most of
+          the chasing your team does today, because the party who holds the document is
+          the party being asked for it.</p>
+        <ul>
+          <li>Application status and full approval history, visible to the vendor</li>
+          <li>Document library with expiry dates and advance renewal prompts</li>
+          <li>Purchase orders, bills and payment history drawn from NetSuite itself</li>
+          <li>Self service updates to contacts, addresses and banking detail</li>
+        </ul>
+      </div>
     </div>
-    <div class="c">
-      <div class="n">03 &middot; Port staff</div>
-      <h3>PVMS inside NetSuite</h3>
-      <p>The internal view. Review, score, approve and report without leaving
-         NetSuite.</p>
-      <ul>
-        <li>Review queue with status and ageing</li>
-        <li>Multi step approval workflow</li>
-        <li>COI tracking and expiry alerts</li>
-        <li>Compliance dashboards and audit trail</li>
-      </ul>
+
+    <div class="r">
+      <div class="rn"><span>03</span>Port staff</div>
+      <div class="rc">
+        <h3>PVMS inside NetSuite</h3>
+        <p>The internal workspace, and the reason this is a NetSuite project rather than
+          a portal project. Purchasing works a review queue that shows how long each
+          application has been waiting and who it is with. Risk and IT security approve
+          in sequence, each step recorded. On final approval the vendor record is created
+          in NetSuite directly, with the commodity codes, the documents and the approval
+          trail attached to it. Compliance reporting is then a query against records you
+          already hold, not a spreadsheet somebody assembles.</p>
+        <ul>
+          <li>Review queue with status, ageing and overdue flags</li>
+          <li>Multi step approval workflow with an owner and a timestamp at each step</li>
+          <li>Certificate of insurance tracking with expiry alerts before a PO is affected</li>
+          <li>Compliance dashboards and a complete audit trail</li>
+        </ul>
+      </div>
     </div>
+
   </div>
 </div>
 
@@ -188,14 +239,16 @@
     <div class="step">
       <div class="s">Step 1</div>
       <div class="t">Apply</div>
-      <div class="d">Vendor completes the guided application and uploads their
-        documents. Nothing incomplete can be submitted.</div>
+      <div class="d">The vendor completes the guided application and uploads their
+        documents. The form will not let them submit something incomplete, so what
+        reaches the Port is ready to be reviewed.</div>
     </div>
     <div class="step">
       <div class="s">Step 2</div>
       <div class="t">Review</div>
-      <div class="d">Purchasing sees it in the queue with everything attached. Risk and
-        IT security review in sequence, each visible.</div>
+      <div class="d">It appears in the Purchasing queue with every document attached.
+        Risk and IT security review in turn, and anyone can see whose desk it is on and
+        how long it has been there.</div>
     </div>
     <div class="step">
       <div class="s">Step 3</div>
@@ -206,37 +259,11 @@
     <div class="step">
       <div class="s">Step 4</div>
       <div class="t">Maintain</div>
-      <div class="d">The vendor keeps their own documents current from the portal. The
-        Port is alerted before anything expires.</div>
+      <div class="d">The vendor keeps their own documents current from the portal and
+        is prompted before anything lapses. The Port is alerted too, well before an
+        expiry can hold up a purchase order.</div>
     </div>
   </div>
-</div>
-
-<div class="sec">
-  <h2><span>&#9632;</span>What this changes</h2>
-  <table>
-    <tr><th>Today</th><th>With PVMS</th></tr>
-    <tr>
-      <td class="k">Applications by email and PDF</td>
-      <td>Structured, validated intake. Complete on arrival.</td>
-    </tr>
-    <tr>
-      <td class="k">COI expiry found when a PO is held</td>
-      <td>Tracked with alerts before expiry, and the vendor renews it themselves.</td>
-    </tr>
-    <tr>
-      <td class="k">Status lives in someone's inbox</td>
-      <td>Review queue with ageing, visible to Purchasing and to the vendor.</td>
-    </tr>
-    <tr>
-      <td class="k">Vendor set up by rekeying</td>
-      <td>Approval creates the NetSuite vendor record directly.</td>
-    </tr>
-    <tr>
-      <td class="k">Compliance reporting assembled by hand</td>
-      <td>Dashboards and an audit trail as a by-product of the workflow.</td>
-    </tr>
-  </table>
 </div>
 
 <div class="sec">
